@@ -1,0 +1,1 @@
+select * from BMessage order by MSG_ID desc

@@ -1,0 +1,27 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        dynamic result = new SL.Data.DynamicRecord();
+        result.Auth = newAuth;
+
+        result.data = SL.Data.SQL.QuerySingle("select PSP_ID,PSP_CODE,PSP_NAME,PSP_REGISTRATION_DT,XPS_TOTAL_AMOUNT from BProspect join XProspect on PSP_ID=XPS_PSP_ID where PSP_ID=@p0", userId);
+        result.success = true;
+
+        Json.Write(result, Output);
+    }
+}

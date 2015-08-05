@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+您 Web 项目的发布/打包进程将使用此文件。您可以通过编辑此 MSBuild 文件
+来自定义该进程的行为。若要了解与此相关的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkID=208121。
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\wetrip</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="App_Code/AuthHelper.cshtml">
+      <publishTime>07/22/2015 16:02:20</publishTime>
+    </File>
+    <File Include="bin/SL.dll">
+      <publishTime>07/27/2015 11:40:11</publishTime>
+    </File>
+    <File Include="bin/SL.Web.dll">
+      <publishTime>07/27/2015 11:40:12</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/emotion.css">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/emotion.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/0.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/bface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/cface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/fface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/jxface2.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/neweditor-tab-bg.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/tface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/wface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/emotion/images/yface.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/formula/formula.css">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/formula/formula.html">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/formula/formula.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/formula/images/formula.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/image/image.css">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/image/image.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/image/images/close.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/image/images/upload1.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/image/images/upload2.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/link/link.js">
+      <publishTime>07/17/2015 16:56:53</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/map/map.html">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/map/map.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/images/center_focus.jpg">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/images/left_focus.jpg">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/images/none_focus.jpg">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/images/right_focus.jpg">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/video.css">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/dialogs/video/video.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/index.html">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/en.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/addimage.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/alldeletebtnhoverskin.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/alldeletebtnupskin.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/background.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/button.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/copy.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/deletedisable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/deleteenable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/imglabel.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/listbackground.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/localimage.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/music.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/rotateleftdisable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/rotateleftenable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/rotaterightdisable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/rotaterightenable.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/en/images/upload.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/images/copy.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/images/imglabel.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/images/localimage.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/images/music.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/images/upload.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/lang/zh-cn/zh-cn.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/net/getContent.ashx">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/net/imageUp.ashx">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/css/umeditor.css">
+      <publishTime>07/17/2015 16:55:02</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/caret.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/close.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/icons.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/icons.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/ok.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/pop-bg.png">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/spacer.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/themes/default/images/videologo.gif">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/third-party/jquery.min.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/third-party/mathquill/mathquill.css">
+      <publishTime>07/20/2015 09:13:12</publishTime>
+    </File>
+    <File Include="components/umeditor/third-party/mathquill/mathquill.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/third-party/mathquill/mathquill.min.js">
+      <publishTime>03/19/2014 17:08:20</publishTime>
+    </File>
+    <File Include="components/umeditor/umeditor.config.js">
+      <publishTime>07/20/2015 09:13:12</publishTime>
+    </File>
+    <File Include="components/umeditor/umeditor.js">
+      <publishTime>07/17/2015 16:47:38</publishTime>
+    </File>
+    <File Include="controller.js">
+      <publishTime>07/27/2015 11:36:49</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>07/20/2015 09:38:19</publishTime>
+    </File>
+    <File Include="images/btn_fold.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/btn_nochild.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/btn_spread.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/datePicker.gif">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/grid_child_header.gif">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/grid_header.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/header.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/headerbg.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/icons.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/point.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/sort_asc.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/sort_asc_disabled.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/sort_both.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/sort_desc.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/sort_desc_disabled.png">
+      <publishTime>07/15/2015 16:56:50</publishTime>
+    </File>
+    <File Include="images/style.css">
+      <publishTime>07/27/2015 11:36:49</publishTime>
+    </File>
+    <File Include="index.html">
+      <publishTime>07/27/2015 11:36:46</publishTime>
+    </File>
+    <File Include="slan.js">
+      <publishTime>07/27/2015 11:36:49</publishTime>
+    </File>
+    <File Include="Views/API/activity/add_comment.cshtml">
+      <publishTime>07/22/2015 16:32:39</publishTime>
+    </File>
+    <File Include="Views/API/activity/comment_list.cshtml">
+      <publishTime>07/22/2015 16:33:07</publishTime>
+    </File>
+    <File Include="Views/API/activity/get.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/activity/list.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/activity/recommend.cshtml">
+      <publishTime>07/24/2015 12:52:21</publishTime>
+    </File>
+    <File Include="Views/API/activity/reply_comment.cshtml">
+      <publishTime>07/22/2015 17:25:07</publishTime>
+    </File>
+    <File Include="Views/API/article/get.cshtml">
+      <publishTime>07/24/2015 12:53:05</publishTime>
+    </File>
+    <File Include="Views/API/article/list.cshtml">
+      <publishTime>07/24/2015 12:52:18</publishTime>
+    </File>
+    <File Include="Views/API/destination/add_comment.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/destination/comment_list.cshtml">
+      <publishTime>07/22/2015 10:22:28</publishTime>
+    </File>
+    <File Include="Views/API/destination/get.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/destination/list.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/destination/reply_comment.cshtml">
+      <publishTime>07/23/2015 15:04:19</publishTime>
+    </File>
+    <File Include="Views/API/Manage/add_activity.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/Manage/add_article.cshtml">
+      <publishTime>07/24/2015 13:05:27</publishTime>
+    </File>
+    <File Include="Views/API/Manage/add_destination.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/Manage/delete_acticle.cshtml">
+      <publishTime>07/24/2015 12:42:40</publishTime>
+    </File>
+    <File Include="Views/API/Manage/delete_activity.cshtml">
+      <publishTime>07/22/2015 09:19:51</publishTime>
+    </File>
+    <File Include="Views/API/Manage/delete_destination.cshtml">
+      <publishTime>07/20/2015 15:40:20</publishTime>
+    </File>
+    <File Include="Views/API/Manage/delete_recommend.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/Manage/Login.cshtml">
+      <publishTime>07/20/2015 09:38:19</publishTime>
+    </File>
+    <File Include="Views/API/Manage/modify_activity.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/Manage/modify_article.cshtml">
+      <publishTime>07/24/2015 13:06:49</publishTime>
+    </File>
+    <File Include="Views/API/Manage/modify_destination.cshtml">
+      <publishTime>07/24/2015 09:17:22</publishTime>
+    </File>
+    <File Include="Views/API/Manage/UMEditor.ImageUp.cshtml">
+      <publishTime>07/22/2015 09:19:51</publishTime>
+    </File>
+    <File Include="Views/API/Manage/user_list.cshtml">
+      <publishTime>07/22/2015 10:05:02</publishTime>
+    </File>
+    <File Include="Views/API/quan/list.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/user/get.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/user/login.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/user/register.cshtml">
+      <publishTime>07/24/2015 10:39:54</publishTime>
+    </File>
+    <File Include="Views/API/user/reset_pwd.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/user/send_sms.cshtml">
+      <publishTime>07/22/2015 11:41:08</publishTime>
+    </File>
+    <File Include="Views/API/user/update.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/API/user/update_pwd.cshtml">
+      <publishTime>07/27/2015 09:21:37</publishTime>
+    </File>
+    <File Include="Views/Core/Index.cshtml">
+      <publishTime>07/20/2015 09:38:19</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>07/20/2015 09:38:19</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>07/20/2015 09:38:19</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>07/27/2015 11:40:12</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

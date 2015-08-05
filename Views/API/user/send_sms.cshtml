@@ -10,13 +10,13 @@
     else
     {
         var numbers = RandomUtil.CreateNumbers(4);
-        SL.Util.CacheUtil.CreateCache("SMS_" + mobile, 3 * 1 / 60, numbers);
+        SL.Util.CacheUtil.CreateCache("SMS_" + mobile, 3f / 60, numbers);
 
         var content = "您的手机短信验证码为" + numbers;
 
         using (SL.Data.Database db = SL.Data.Database.Open("DMS"))
         {
-            db.Execute("insert into BMessage (MSG_MAT_ID,MSG_MSG_TYPE,MSG_MOBILE,MSG_CONTENT,MSG_SIGN,MSG_STATUS,MSG_LEVEL,MSG_SEND_TYPE,MSG_SEND_TIME) values (1,1,@p0,@p2,'【ABS家居】',1,3,2,GetDate(),MSG_MEMO,'')", mobile, content);
+            db.Execute("insert into BMessage (MSG_MAT_ID,MSG_MSG_TYPE,MSG_MOBILE,MSG_CONTENT,MSG_SIGN,MSG_STATUS,MSG_LEVEL,MSG_SEND_TYPE,MSG_SEND_TIME,MSG_MEMO) values (1,1,@p0,@p1,'【ABS家居】',1,3,2,GetDate(),'')", mobile, content);
         }
 
         Json.Write(new { success = true }, Output);

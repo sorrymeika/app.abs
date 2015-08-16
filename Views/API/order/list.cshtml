@@ -1,0 +1,75 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int status = req.Int("status");
+    int payStatus = req.Int("payStatus");
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    int page = req.Int("page");
+    int pageSize = req.Int("pageSize", 10);
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        int total;
+        string where = "PUR_PSP_ID=@p0";
+        List<object> parameters = new List<object>() { userId };
+
+        if (status != 0)
+        {
+            where += " and PUR_PUS_ID=@p" + parameters.Count;
+            parameters.Add(status);
+        }
+
+        if (payStatus != 0)
+        {
+            where += " and PUR_PAS_ID=@p" + parameters.Count;
+            parameters.Add(payStatus);
+        }
+
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.QueryPage("PUR_ID",
+    "PUR_ID,PUR_CODE,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS",
+    "BPurchase join XPurchase on PUR_ID=XPU_PUR_ID join RPurchaseStatus on PUR_PUS_ID=PUS_ID left join RPayType on PAY_ID=PUR_PAY_ID join RPurchaseType on PTY_ID=PUR_PTY_ID left join RPayStatus on PAS_ID=PUR_PAS_ID",
+    where,
+    page,
+    pageSize,
+    parameters.ToArray(),
+    out total);
+
+            if (data != null)
+            {
+                data.All(item =>
+                {
+                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join WProductPicture on WPP_PRD_ID=PRD_ID where LPK_PUR_ID=@p0", item.PUR_ID);
+
+                    item.Children = children;
+
+                    if (children != null)
+                    {
+                        children.All(prd =>
+                        {
+                            prd.WPP_LIST_PIC = "http://media.abs.cn/" + prd.WPP_LIST_PIC;
+                            prd.PRD_SPEC = prd.PRD_SPEC.Split('|')[0];
+                            return true;
+                        });
+                    }
+
+                    return true;
+                });
+            }
+
+            Json.Write(new { success = true, data = data, total = total }, Output);
+        }
+    }
+}

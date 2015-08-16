@@ -1,0 +1,20 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string name = req.String("name");
+
+    var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.Image>(name + "Image");
+    var data = settingUtil.Get().OrderByDescending(a => a.Sort);
+
+    if (null != data)
+    {
+        data.All(a =>
+        {
+            a.Src = SL.Util.RequestFile.FullUrl(a.Src);
+            return true;
+        });
+    }
+
+    Json.Write(new { success = true, data = data }, Output);
+}

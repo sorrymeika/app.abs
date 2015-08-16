@@ -1,0 +1,53 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string status = req.String("status");
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        string where = "CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1";
+        List<object> parameters = new List<object>() { userId };
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            where += " and CSV_USE_FLAG=@p" + parameters.Count;
+            parameters.Add(req.Int("status"));
+        }
+
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.Query("select VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where " + where, parameters.ToArray());
+
+            if (data != null)
+            {
+                data.All(item =>
+                {
+                    if (DateTime.Now > item.CSV_END_DT)
+                    {
+                        item.IsOverdue = true;
+                    }
+                    else
+                    {
+                        item.IsOverdue = false;
+                    }
+
+                    return true;
+                });
+            }
+
+            Json.Write(new { success = true, data = data }, Output);
+        }
+    }
+}

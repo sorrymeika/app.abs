@@ -1,0 +1,37 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string name = req.String("name");
+    int id = req.Int("id", false, "need id");
+
+    string title = req.String("title");
+    string url = req.String("url");
+    string description = req.String("description");
+    int sort = req.Int("sort");
+    var pic = req.File("src");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+
+    var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.Image>(name + "Image");
+    var data = settingUtil.FirstOrDefault(a => a.ID == id);
+
+    if (!pic.IsEmpty)
+    {
+        SL.Util.RequestFile.Delete(data.Src);
+        data.Src = pic.Save();
+    }
+
+    data.Title = title;
+    data.Url = url;
+    data.Description = description;
+    data.Sort = sort;
+
+    settingUtil.Save();
+
+    SL.Util.HtmlUtil.Output(new { success = true });
+}

@@ -1,0 +1,16 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string name = req.String("name");
+
+    var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.Image>(name + "Image");
+
+    int id = int.Parse(Request.Form["id"]);
+
+    var data = settingUtil.FirstOrDefault(a => a.ID == id);
+    SL.Util.RequestFile.Delete(data.Src);
+    settingUtil.Delete(data);
+
+    Json.Write(new { success = true, data = true }, Output);
+}

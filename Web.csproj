@@ -87,6 +87,7 @@
     <Compile Include="UMEditor\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="controller.js" />
     <Content Include="Global.asax" />
     <Content Include="images\btn_fold.png" />
     <Content Include="images\btn_nochild.png" />
@@ -104,6 +105,10 @@
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
     <Content Include="images\style.css" />
+    <Content Include="index.html" />
+    <Content Include="settings\controller.js" />
+    <Content Include="settings\data.js" />
+    <Content Include="slan.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -142,6 +147,16 @@
     <Content Include="Views\API\_blank.cshtml" />
     <Content Include="Views\API\user\send_sms.cshtml" />
     <Content Include="Views\API\user\get.cshtml" />
+    <Content Include="Views\API\manage\login.cshtml" />
+    <Content Include="Views\API\user\get_city.cshtml" />
+    <Content Include="Views\API\user\update.cshtml" />
+    <Content Include="Views\API\order\list.cshtml" />
+    <Content Include="Views\API\user\voucher_list.cshtml" />
+    <Content Include="Views\API\user\get_points.cshtml" />
+    <Content Include="Views\API\settings\ad_list.cshtml" />
+    <Content Include="Views\API\manage\delete_ad.cshtml" />
+    <Content Include="Views\API\manage\modify_ad.cshtml" />
+    <Content Include="Views\API\manage\add_ad.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

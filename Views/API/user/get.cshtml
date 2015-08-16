@@ -17,9 +17,13 @@
     else
     {
         dynamic result = new SL.Data.DynamicRecord();
-        result.Auth = newAuth;
 
-        result.data = SL.Data.SQL.QuerySingle("select PSP_ID,PSP_CODE,PSP_NAME,PSP_REGISTRATION_DT,XPS_TOTAL_AMOUNT from BProspect join XProspect on PSP_ID=XPS_PSP_ID where PSP_ID=@p0", userId);
+        result.data = SL.Data.SQL.QuerySingle("select PSP_ID as UserID,PSP_CODE as Mobile,PSP_NAME as UserName,PSP_REGISTRATION_DT,XPS_TOTAL_AMOUNT as Amount,XPS_BIRTH_DT as BirthDay,XPS_GND_ID as Gender,XPS_FAMILY_SIZE as FamilySize,XPS_CHILD_FLAG as HasChild,XPS_CHILD_BIRTH_DT as ChildBirthDay,XPS_CTY_ID as CityID,CTY_DESC as CityName,CTY_PRV_ID as ProvID,XPS_AVAILABLEPOINTS as Points from BProspect join XProspect on PSP_ID=XPS_PSP_ID left join RCity on CTY_ID=XPS_CTY_ID where PSP_ID=@p0", userId);
+
+        if (!string.IsNullOrEmpty(newAuth))
+        {
+            result.data.Auth = newAuth;
+        }
         result.success = true;
 
         Json.Write(result, Output);

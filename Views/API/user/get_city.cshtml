@@ -1,0 +1,10 @@
+﻿@using SL.Util
+@{
+    using (SL.Data.Database db = SL.Data.Database.Open())
+    {
+        var province = db.Query("select PRV_ID,PRV_DESC from RProvince order by PRV_ORDER_NUM desc,PRV_DESC");
+        var city = db.Query("select CTY_ID,CTY_PRV_ID,CTY_DESC from RCity order by CTY_ORDER_NUM desc,CTY_DESC");
+
+        Json.Write(new { success = true, data = city, province = province }, Output);
+    }
+}

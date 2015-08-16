@@ -1,0 +1,27 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+    string adminName = req.String("username", false, "请填写用户名");
+    string password = req.Password("password", "请填写密码");
+    var checkCode = SessionUtil.Get<string>("Captcha");
+    string validcode = req.String("captcha", false, "请填写验证码", compare: checkCode, compareText: "验证码不正确");
+
+    SessionUtil.Remove("Captcha");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else
+    {
+        if (adminName != "admin" || System.Configuration.ConfigurationManager.AppSettings["Admin"] != password)
+        {
+            Json.Write(new { success = false, msg = "登录失败" }, Output);
+        }
+        else
+        {
+            SessionUtil.Set("Admin", adminName);
+            Json.Write(new { success = true, msg = "登录成功" }, Output);
+        }
+    }
+}

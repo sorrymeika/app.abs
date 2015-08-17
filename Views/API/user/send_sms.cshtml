@@ -9,6 +9,15 @@
     }
     else
     {
+        var times = SL.Util.CacheUtil.Get<int>("SMS_" + Request.UserHostAddress);
+        if (times >= 2)
+        {
+            Json.Write(new { success = false, msg = "请一分钟后尝试" }, Output);
+            return;
+        }
+
+        SL.Util.CacheUtil.CreateCache("SMS_" + Request.UserHostAddress, 1f / 60, ++times);
+
         var numbers = RandomUtil.CreateNumbers(4);
         SL.Util.CacheUtil.CreateCache("SMS_" + mobile, 3f / 60, numbers);
 

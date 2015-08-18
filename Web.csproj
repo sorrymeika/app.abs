@@ -159,6 +159,7 @@
     <Content Include="Views\API\manage\add_ad.cshtml" />
     <Content Include="Views\API\user\get_unread_msg_count.cshtml" />
     <Content Include="Views\API\user\get_msg.cshtml" />
+    <Content Include="Views\API\user\get_month_free.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

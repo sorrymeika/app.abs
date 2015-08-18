@@ -1,0 +1,26 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var count = db.QueryValue<int>("select COUNT(1) from BPostMessage where not exists (select 1 from LPspMsg where LPM_PSP_ID=@p0 and MSG_ID=LPM_MSG_ID)", userId);
+
+            Json.Write(new { success = true, count = count }, Output);
+        }
+    }
+}

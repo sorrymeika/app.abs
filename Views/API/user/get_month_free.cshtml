@@ -18,7 +18,7 @@
     {
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.QuerySingle("select PSP_ID as UserID,PSP_CODE as Mobile,PSP_NAME as UserName,PSP_REGISTRATION_DT,XPS_TOTAL_AMOUNT as Amount,XPS_BIRTH_DT as BirthDay,XPS_GND_ID as Gender,XPS_FAMILY_SIZE as FamilySize,XPS_CHILD_FLAG as HasChild,XPS_CHILD_BIRTH_DT as ChildBirthDay,XPS_CTY_ID as CityID,CTY_DESC as CityName,CTY_PRV_ID as ProvID,XPS_AVAILABLEPOINTS as Points,XPS_END_FREE_DT from BProspect join XProspect on PSP_ID=XPS_PSP_ID left join RCity on CTY_ID=XPS_CTY_ID where PSP_ID=@p0", userId);
+            var data = db.QuerySingle("select  where PSP_ID=@p0", userId);
 
             if (!string.IsNullOrEmpty(newAuth))
             {
@@ -33,10 +33,6 @@
             {
                 data.FreeMonths = 0;
             }
-
-            data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=1", userId);
-
-            data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase where PUR_PUS_ID=8 and PUR_PSP_ID=@p0", userId);
 
             Json.Write(new { success = true, data = data }, Output);
         }

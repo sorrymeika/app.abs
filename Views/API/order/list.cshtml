@@ -45,7 +45,8 @@
     page,
     pageSize,
     parameters.ToArray(),
-    out total);
+    out total,
+    new Dictionary<string, bool> { { "PUR_ID", false } });
 
             if (data != null)
             {

@@ -19,7 +19,7 @@
       <publishTime>08/17/2015 03:02:06</publishTime>
     </File>
     <File Include="bin/SL.Web.dll">
-      <publishTime>08/17/2015 03:02:07</publishTime>
+      <publishTime>08/19/2015 21:06:48</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/05/2011 15:45:38</publishTime>
@@ -274,19 +274,19 @@
       <publishTime>07/17/2015 16:47:38</publishTime>
     </File>
     <File Include="controller.js">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="Global.asax">
       <publishTime>08/05/2015 20:45:30</publishTime>
     </File>
     <File Include="images/btn_fold.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/btn_nochild.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/btn_spread.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/datePicker.gif">
       <publishTime>08/17/2015 03:01:25</publishTime>
@@ -295,49 +295,49 @@
       <publishTime>08/17/2015 03:01:25</publishTime>
     </File>
     <File Include="images/grid_header.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/header.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/headerbg.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/icons.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/point.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/sort_asc.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/sort_asc_disabled.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/sort_both.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/sort_desc.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/sort_desc_disabled.png">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="images/style.css">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>08/17/2015 02:59:55</publishTime>
+      <publishTime>08/17/2015 21:56:48</publishTime>
     </File>
     <File Include="settings/controller.js">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="settings/data.js">
-      <publishTime>08/17/2015 02:59:56</publishTime>
+      <publishTime>08/17/2015 21:56:49</publishTime>
     </File>
     <File Include="slan.js">
-      <publishTime>08/17/2015 03:00:00</publishTime>
+      <publishTime>08/17/2015 21:56:52</publishTime>
     </File>
     <File Include="Views/API/activity/add_comment.cshtml">
       <publishTime>07/22/2015 16:32:39</publishTime>
@@ -427,7 +427,7 @@
       <publishTime>07/22/2015 10:05:02</publishTime>
     </File>
     <File Include="Views/API/order/list.cshtml">
-      <publishTime>08/16/2015 22:15:11</publishTime>
+      <publishTime>08/19/2015 22:34:41</publishTime>
     </File>
     <File Include="Views/API/quan/list.cshtml">
       <publishTime>07/27/2015 09:21:37</publishTime>
@@ -436,13 +436,22 @@
       <publishTime>08/17/2015 01:02:47</publishTime>
     </File>
     <File Include="Views/API/user/get.cshtml">
-      <publishTime>08/16/2015 23:00:52</publishTime>
+      <publishTime>08/19/2015 01:32:10</publishTime>
     </File>
     <File Include="Views/API/user/get_city.cshtml">
       <publishTime>08/16/2015 15:08:24</publishTime>
     </File>
+    <File Include="Views/API/user/get_month_free.cshtml">
+      <publishTime>08/19/2015 02:19:00</publishTime>
+    </File>
+    <File Include="Views/API/user/get_msg.cshtml">
+      <publishTime>08/19/2015 21:04:46</publishTime>
+    </File>
     <File Include="Views/API/user/get_points.cshtml">
       <publishTime>08/16/2015 23:30:29</publishTime>
+    </File>
+    <File Include="Views/API/user/get_unread_msg_count.cshtml">
+      <publishTime>08/19/2015 21:04:46</publishTime>
     </File>
     <File Include="Views/API/user/login.cshtml">
       <publishTime>08/05/2015 20:45:30</publishTime>
@@ -454,7 +463,7 @@
       <publishTime>07/27/2015 09:21:37</publishTime>
     </File>
     <File Include="Views/API/user/send_sms.cshtml">
-      <publishTime>08/05/2015 22:37:25</publishTime>
+      <publishTime>08/17/2015 21:54:38</publishTime>
     </File>
     <File Include="Views/API/user/update.cshtml">
       <publishTime>08/16/2015 16:21:50</publishTime>
@@ -478,7 +487,7 @@
       <publishTime>08/05/2015 20:45:30</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/17/2015 03:02:08</publishTime>
+      <publishTime>08/19/2015 21:06:49</publishTime>
     </File>
   </ItemGroup>
 </Project>

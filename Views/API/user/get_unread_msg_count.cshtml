@@ -16,9 +16,9 @@
     }
     else
     {
-        using (SL.Data.Database db = SL.Data.Database.Open())
+        using (SL.Data.Database db = SL.Data.Database.Open("MS_ABS"))
         {
-            var count = db.QueryValue<int>("select COUNT(1) from BPostMessage where not exists (select 1 from LPspMsg where LPM_PSP_ID=@p0 and MSG_ID=LPM_MSG_ID)", userId);
+            var count = db.QueryValue<int>("select COUNT(1) from BMessage left join LPspMsg on MSG_ID=LPM_MSG_ID where MSG_RMT_ID=5 and MSG_START_DT<=@p1 and MSG_END_DT>=@p1 and ((MSG_ALL_FLAG=0 and LPM_PSP_ID=@p0 and LPM_STATUS=0) or (MSG_ALL_FLAG=1 and (LPM_PSP_ID is null or (LPM_PSP_ID=@p0 and LPM_STATUS=0))))", userId, DateTime.Now);
 
             Json.Write(new { success = true, count = count }, Output);
         }

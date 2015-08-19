@@ -4,6 +4,9 @@
 
     int userId = req.Int("userId", false, "参数错误:userId");
     string auth = req.String("auth", false, "参数错误:auth");
+
+    int page = req.Int("page");
+    int pageSize = req.Int("pageSize", 10);
     string newAuth;
 
     if (req.HasError)
@@ -16,11 +19,19 @@
     }
     else
     {
-        using (SL.Data.Database db = SL.Data.Database.Open())
+        using (SL.Data.Database db = SL.Data.Database.Open("MS_ABS"))
         {
-            var count = db.QueryValue<int>("select MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT from BPostMessage left join LPspMsg on MSG_ID=LPM_MSG_ID where MSG_DT>@p0", DateTime.Now.AddDays(-30));
+            int total;
+            var data = db.QueryPage("MSG_ID",
+                "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_READ_DT",
+                "BMessage left join LPspMsg on MSG_ID=LPM_MSG_ID",
+                "LPM_MSG_ID=@p1 and @p0 between MSG_START_DT and MSG_END_DT",
+                page, pageSize,
+                new object[] { DateTime.Now, userId },
+                out total,
+                new Dictionary<string, bool> { { "MSG_DT", false } });
 
-            Json.Write(new { success = true, count = count }, Output);
+            Json.Write(new { success = true, data = data, total = total }, Output);
         }
     }
 }

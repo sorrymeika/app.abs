@@ -48,7 +48,8 @@ insert into RMessageType values (1,'APP')
 create table LPspMsg (
 LPM_ID int identity primary key,
 LPM_MSG_ID int,
-LPM_PSP_ID int
+LPM_PSP_ID int,
+LPM_STATUS int
 )
 
 select COUNT(1) from BPostMessage where not exists (select 1 from LPspMsg where LPM_PSP_ID=59 and MSG_ID=LPM_MSG_ID)

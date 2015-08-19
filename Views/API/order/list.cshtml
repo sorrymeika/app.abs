@@ -51,7 +51,7 @@
             {
                 data.All(item =>
                 {
-                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join WProductPicture on WPP_PRD_ID=PRD_ID where LPK_PUR_ID=@p0", item.PUR_ID);
+                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID left join WProductPicture on WPP_PRD_ID=PRD_ID where LPK_PUR_ID=@p0", item.PUR_ID);
 
                     item.Children = children;
 

@@ -21,7 +21,7 @@
     else
     {
         int total;
-        string where = "PUR_PSP_ID=@p0";
+        string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5";
         List<object> parameters = new List<object>() { userId };
 
         if (status != 0)
@@ -39,7 +39,7 @@
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
             var data = db.QueryPage("PUR_ID",
-    "PUR_ID,PUR_CODE,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUR_CNL_ID,CNL_DESC,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS",
+    "PUR_ID,PUR_CODE,PUR_DT,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUR_CNL_ID,CNL_DESC,CNL_CLT_ID,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS",
     "BPurchase join XPurchase on PUR_ID=XPU_PUR_ID join RPurchaseStatus on PUR_PUS_ID=PUS_ID left join RPayType on PAY_ID=PUR_PAY_ID join RPurchaseType on PTY_ID=PUR_PTY_ID left join BChannel on PUR_CNL_ID=CNL_ID left join RPayStatus on PAS_ID=PUR_PAS_ID",
     where,
     page,
@@ -52,7 +52,7 @@
             {
                 data.All(item =>
                 {
-                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID left join WProductPicture on WPP_PRD_ID=PRD_ID where LPK_PUR_ID=@p0", item.PUR_ID);
+                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID left join WProductPicture on WPP_PRD_ID=PRD_ID where LPK_PUR_ID=@p0 and PRD_ID!=100000", item.PUR_ID);
 
                     item.Children = children;
 

@@ -27,7 +27,7 @@
 
             if (data.XPS_END_FREE_DT != null && data.XPS_END_FREE_DT > DateTime.Now)
             {
-                data.FreeMonths = (DateTime.Today.Year - data.XPS_END_FREE_DT.Year) * 12 + DateTime.Today.Month - data.XPS_END_FREE_DT.Month;
+                data.FreeMonths = Math.Max(0, data.XPS_END_FREE_DT.Month - ((DateTime.Today.Year - data.XPS_END_FREE_DT.Year) * 12 + DateTime.Today.Month));
             }
             else
             {
@@ -36,7 +36,7 @@
 
             data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=1", userId);
 
-            data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase where PUR_PUS_ID=8 and PUR_PSP_ID=@p0", userId);
+            data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase where PUR_PSP_ID=@p0", userId);
 
             Json.Write(new { success = true, data = data }, Output);
         }

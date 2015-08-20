@@ -8,84 +8,80 @@
         #allmap { width: 100%; height: 100%; }
         p { margin-left: 5px; font-size: 14px; }
     </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ruKePGl5aEpASfCZtQm6a2U5"></script>
-    <title>添加定位相关控件</title>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
 </head>
 <body>
     <div id="allmap"></div>
 </body>
 </html>
+<script>
+    var post = function (url, data, callback) {
+        if (typeof data === 'function') callback = data, data = null;
+
+        var xhr = new XMLHttpRequest();
+        if (!data)
+            xhr.open('GET', url, true);
+        else {
+            xhr.open('POST', url, true);
+            if (typeof data !== "string") {
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                var post = [];
+                for (var k in data) {
+                    post.push(k + '=' + encodeURIComponent(data[k]))
+                }
+                data = post.join('&');
+            } else {
+
+                xhr.setRequestHeader("Content-Type", "application/json");
+            }
+        }
+
+        xhr.onreadystatechange = function (e) {
+            if (this.readyState == 4 && this.status == 200) {
+                callback(JSON.parse(this.responseText));
+            }
+        };
+        xhr.send(data);
+    };
+</script>
 <script type="text/javascript">
     // 百度地图API功能
     var map = new BMap.Map("allmap");
     map.centerAndZoom(new BMap.Point(121.48789949, 31.24916171), 11);
+    map.addControl(new BMap.ZoomControl());
 
-    var myCity = new BMap.LocalCity();
-    myCity.get(function (result) {
-        map.setCenter(result.name);
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var coords = position.coords;
+
+        var point = new BMap.Point(coords.latitude, coords.longitude);
+        map.centerAndZoom(point, 16);
+
+    }, function (error) {
+        //alert("定位失败");
     });
 
-    // 添加带有定位的导航控件
-    var navigationControl = new BMap.NavigationControl({
-        // 靠左上角位置
-        anchor: BMAP_ANCHOR_TOP_LEFT,
-        // LARGE类型
-        type: BMAP_NAVIGATION_CONTROL_LARGE,
-        // 启用显示定位
-        enableGeolocation: true
-    });
-    map.addControl(navigationControl);
-    // 添加定位控件
-    var geolocationControl = new BMap.GeolocationControl({
-        enableAutoLocation: true
-    });
+    post('/api/shop/shop_list', function (res) {
+        if (res && res.data) {
+            for (var i = 0; i < res.data.length; i++) {
+                var item = res.data[i];
 
-
-    geolocationControl.addEventListener("locationSuccess", function (e) {
-        // 定位成功事件
-        var address = '';
-        address += e.addressComponent.province;
-        address += e.addressComponent.city;
-        address += e.addressComponent.district;
-        address += e.addressComponent.street;
-        address += e.addressComponent.streetNumber;
-        //alert("当前定位地址为：" + address);
-
-        var current = new BMap.Marker(e.point, {
-        });
-
-        map.addOverlay(current);
-
-        map.centerAndZoom(e.point, 14);
-    });
-    geolocationControl.addEventListener("locationError", function (e) {
-        // 定位失败事件
-        alert(e.message);
-    });
-    map.addControl(geolocationControl);
-    geolocationControl.location();
-
-
-    /*
-    var geolocation = new BMap.Geolocation();
-    geolocation.getCurrentPosition(function (r) {
-        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-            // map.centerAndZoom(r.point, 14);
+                var myGeo = new BMap.Geocoder();
+                // 将地址解析结果显示在地图上,并调整地图视野
+                myGeo.getPoint(item.XCL_ADDRESS, function (point) {
+                    if (point) {
+                        var marker1 = new BMap.Marker(point, {
+                            icon: new BMap.Icon('http://web.wx.abs.cn/images/store/abslogo.png', new BMap.Size(23, 28)),
+                            offset: new BMap.Size(-13, -15)
+                        });  //创建标注
+                        map.addOverlay(marker1);                 // 将标注添加到地图中
+                        //创建信息窗口
+                        var infoWindow1 = new BMap.InfoWindow(item.CNL_DESC + "<br>" + item.XCL_ADDRESS);
+                        marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
+                        map.centerAndZoom(point, 16);
+                    }
+                }, item.CTY_DESC);
+            }
         }
-        else {
-            //alert('failed' + this.getStatus());
-        }
-    }, { enableHighAccuracy: true })
-    */
-    //关于状态码
-    //BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
-    //BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
-    //BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
-    //BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
-    //BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
-    //BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
-    //BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
-    //BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
-    //BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
 
+    });
 </script>

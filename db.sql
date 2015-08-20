@@ -1,5 +1,7 @@
 select * from BMessage order by MSG_ID desc
 
+update BPurchase set PUR_PSP_ID=59
+
 select * from BProspect
 select * from XProspect
 
@@ -55,3 +57,12 @@ LPM_STATUS int
 select COUNT(1) from BPostMessage where not exists (select 1 from LPspMsg where LPM_PSP_ID=59 and MSG_ID=LPM_MSG_ID)
 
 select MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT from BPostMessage left join LPspMsg on MSG_ID=LPM_MSG_ID where MSG_DT>GETDATE()
+
+select * from XChannel 
+
+update XChannel set XCL_ADDRESS='上海市松江区新松江路927弄开元地中海商业广场3F3050',XCL_PHONE='021-37699007'
+
+update BChannel set CNL_CLT_ID=1
+
+alter table XChannel add XCL_ADDRESS nvarchar(200)
+alter table XChannel add  XCL_PHONE varchar(20)

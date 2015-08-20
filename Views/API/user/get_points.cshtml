@@ -20,7 +20,9 @@
         {
             var points = db.QueryValue<decimal>("select XPS_AVAILABLEPOINTS as Points from BProspect join XProspect on PSP_ID=XPS_PSP_ID where PSP_ID=@p0", userId);
 
-            var data = db.Query("select HPT_POT_ID,POT_DESC,HPT_POINT_AMOUNT,HPT_DT from HPoint join RPointOperationType on HPT_POT_ID=POT_ID where HPT_PSP_ID=@p0", userId);
+            var data = db.Query("select CNL_DESC,HPT_POINT_AMOUNT,HPT_DT from HPoint join BPurchase on PUR_ID=HPT_PUR_ID left join BChannel on PUR_CNL_ID=CNL_ID where HPT_PSP_ID=@p0", userId);
+
+            //var data = db.Query("select CNL_DESC,HPT_POINT_AMOUNT,HPT_DT from HPoint left join BChannel on HPT_CNL_ID=CNL_ID where HPT_PSP_ID=@p0", userId);
 
             Json.Write(new { success = true, points = points, data = data }, Output);
         }

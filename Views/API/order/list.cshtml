@@ -39,8 +39,8 @@
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
             var data = db.QueryPage("PUR_ID",
-    "PUR_ID,PUR_CODE,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS",
-    "BPurchase join XPurchase on PUR_ID=XPU_PUR_ID join RPurchaseStatus on PUR_PUS_ID=PUS_ID left join RPayType on PAY_ID=PUR_PAY_ID join RPurchaseType on PTY_ID=PUR_PTY_ID left join RPayStatus on PAS_ID=PUR_PAS_ID",
+    "PUR_ID,PUR_CODE,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUR_CNL_ID,CNL_DESC,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS",
+    "BPurchase join XPurchase on PUR_ID=XPU_PUR_ID join RPurchaseStatus on PUR_PUS_ID=PUS_ID left join RPayType on PAY_ID=PUR_PAY_ID join RPurchaseType on PTY_ID=PUR_PTY_ID left join BChannel on PUR_CNL_ID=CNL_ID left join RPayStatus on PAS_ID=PUR_PAS_ID",
     where,
     page,
     pageSize,

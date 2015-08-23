@@ -18,23 +18,65 @@
     {
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.QuerySingle("select  where PSP_ID=@p0", userId);
+            var data = db.QuerySingle("select XPS_START_FREE_DT,XPS_END_FREE_DT from XProspect where XPS_PSP_ID=@p0", userId);
 
-            if (!string.IsNullOrEmpty(newAuth))
-            {
-                data.Auth = newAuth;
-            }
+            IList<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
+            Dictionary<string, object> currentMonth = null;
 
-            if (data.XPS_END_FREE_DT != null && data.XPS_END_FREE_DT > DateTime.Now)
+            if (data.XPS_END_FREE_DT != null && data.XPS_START_FREE_DT != null)
             {
-                data.FreeMonths = (DateTime.Today.Year - data.XPS_END_FREE_DT.Year) * 12 + DateTime.Today.Month - data.XPS_END_FREE_DT.Month;
+                DateTime date;
+                for (var i = data.XPS_START_FREE_DT; i < data.XPS_END_FREE_DT;)
+                {
+                    date = i.AddMonths(1);
+
+                    var monthDiff = DateUtil.MonthDiff(i, DateTime.Today);
+
+                    if (Math.Abs(monthDiff) <= 12)
+                    {
+                        var item = new Dictionary<string, object>();
+
+                        var free = db.QuerySingle("select Top 1 FRE_NAME,FRE_TITLE_PIC,FRE_PIC1,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=1 and @p1 between LFC_START_TIME and LFC_END_TIME", userId, i);
+
+                        if (free != null)
+                        {
+                            item.Add("FRE_NAME", free.FRE_NAME);
+                            item.Add("FRE_TITLE_PIC", free.FRE_TITLE_PIC);
+                            item.Add("FRE_PIC1", free.FRE_PIC1);
+                            item.Add("LPF_PUR_ID", free.LPF_PUR_ID);
+                        }
+                        else
+                        {
+                            item.Add("FRE_PIC1", null);
+                        }
+
+                        if (result.FirstOrDefault(a => a.ContainsKey("Year") && (int)a["Year"] == i.Year) == null)
+                        {
+                            item.Add("Year", i.Year);
+                        }
+                        item.Add("Month", i.Month);
+
+                        item.Add("CanGet", monthDiff == 0 && free != null && free.LPF_PUR_ID == null);
+
+                        if (monthDiff < 0)
+                        {
+                            item.Add("Overdue", true);
+                        }
+                        else if (monthDiff == 0)
+                        {
+                            currentMonth = item;
+                        }
+                        result.Add(item);
+                    }
+                    i = date;
+                }
+
             }
             else
             {
-                data.FreeMonths = 0;
             }
 
-            Json.Write(new { success = true, data = data }, Output);
+            Json.Write(new { success = true, auth = newAuth, data = result, currentMonth = currentMonth }, Output);
         }
     }
 }

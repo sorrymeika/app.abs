@@ -1,6 +1,15 @@
 select * from BMessage order by MSG_ID desc
 
+select * from WFree join LFreCnl on LFC_FRE_ID=FRE_ID
+select * from LPspFre
+
 update BPurchase set PUR_PSP_ID=59
+update XProspect set XPS_END_FREE_DT='2015-10-09',XPS_START_FREE_DT='2015-08-09' where XPS_PSP_ID=59
+
+select XPS_START_FREE_DT,XPS_END_FREE_DT from XProspect where XPS_PSP_ID=59
+select Top 1 FRE_NAME,FRE_TITLE_PIC,FRE_PIC1,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=59) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=1 and GETDATE() between LFC_START_TIME and LFC_END_TIME
+
+
 
 select * from BProspect
 select * from XProspect
@@ -23,6 +32,7 @@ select * from RPointType
 
 select * from HPoint
 update HPoint set HPT_PSP_ID= 59
+select * from RPointType
 
 update XProspect set XPS_TOTAL_AMOUNT=1001,XPS_AVAILABLEPOINTS=100
 
@@ -66,3 +76,30 @@ update BChannel set CNL_CLT_ID=1
 
 alter table XChannel add XCL_ADDRESS nvarchar(200)
 alter table XChannel add  XCL_PHONE varchar(20)
+
+
+create table BVoucherDispatcher(
+VDP_ID int primary key,
+VDP_VCA_ID int,
+VDP_DESC nvarchar(400),
+VDP_MESSAGE nvarchar(1000),
+VDP_VALID_FLAG bit
+)
+
+insert into BVoucherDispatcher (VDP_ID,VDP_VCA_ID,VDP_DESC,VDP_MESSAGE,VDP_VALID_FLAG) values (1,13,'首次安装xxx','首次安装xxx',1)
+
+select * from BVoucherActivity
+
+select * from RVoucherType 
+
+alter table BMessage add MSG_ALL_FLAG bit
+
+alter table BCashVoucher add CSV_VDP_ID int
+
+insert into BMessage (MSG_RMT_ID,MSG_ALL_FLAG,MSG_TITLE,MSG_CONTENT,MSG_START_DT,MSG_END_DT) values (5,0,@p0,@p1,@p2,@p3)
+
+select * from BMessage
+
+select * from LPspMsg
+
+alter table HPoint add HPT_CNL_ID int

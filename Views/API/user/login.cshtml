@@ -34,7 +34,7 @@
                 else
                 {
                     id = prospect.PSP_ID;
-                    amount = prospect.XPS_TOTAL_AMOUNT;
+                    amount = prospect.XPS_TOTAL_AMOUNT ?? 0m;
                 }
 
                 if (user == null)
@@ -46,7 +46,7 @@
             {
                 id = prospect.PSP_ID;
                 password = user.USL_PASSWORD;
-                amount = prospect.XPS_TOTAL_AMOUNT;
+                amount = prospect.XPS_TOTAL_AMOUNT ?? 0m;
             }
 
             string auth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(mobile + password + SL.Util.Config.PrivateKey + DateTime.Now.ToString("yyyyMM"), "md5");

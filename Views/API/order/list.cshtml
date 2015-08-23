@@ -62,6 +62,7 @@
                         {
                             prd.WPP_LIST_PIC = "http://media.abs.cn/" + prd.WPP_LIST_PIC;
                             prd.PRD_SPEC = prd.PRD_SPEC.Split('|')[0];
+                            prd.Url = "http://m.abs.cn/#/item/" + prd.PRD_ID + ".html";
                             return true;
                         });
                     }

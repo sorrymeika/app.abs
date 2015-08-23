@@ -1,0 +1,15 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string version = req.String("version");
+
+    if (version != "1.0.0")
+    {
+        Json.Write(new { success = true, updateUrl = "htasdfasdf", text = "adsfasdf" }, Output);
+    }
+    else
+    {
+        Json.Write(new { success = false }, Output);
+    }
+}

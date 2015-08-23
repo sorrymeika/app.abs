@@ -25,8 +25,9 @@
             var data = db.QueryPage("MSG_ID",
                 "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_READ_DT",
                 "BMessage left join LPspMsg on MSG_ID=LPM_MSG_ID",
-                "LPM_MSG_ID=@p1 and @p0 between MSG_START_DT and MSG_END_DT",
-                page, pageSize,
+                "((MSG_ALL_FLAG=0 and LPM_PSP_ID=@p1) or MSG_ALL_FLAG=1) and @p0 between MSG_START_DT and MSG_END_DT",
+                page,
+                pageSize,
                 new object[] { DateTime.Now, userId },
                 out total,
                 new Dictionary<string, bool> { { "MSG_DT", false } });

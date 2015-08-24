@@ -32,7 +32,7 @@
 
                     var monthDiff = DateUtil.MonthDiff(i, DateTime.Today);
 
-                    if (Math.Abs(monthDiff) <= 12)
+                    if (monthDiff <= 3 && monthDiff >= -8)
                     {
                         var item = new Dictionary<string, object>();
 
@@ -58,7 +58,7 @@
 
                         item.Add("CanGet", monthDiff == 0 && free != null && free.LPF_PUR_ID == null);
 
-                        if (monthDiff < 0)
+                        if (monthDiff > 0)
                         {
                             item.Add("Overdue", true);
                         }

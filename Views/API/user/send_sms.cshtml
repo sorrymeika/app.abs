@@ -21,7 +21,7 @@
         var numbers = RandomUtil.CreateNumbers(4);
         SL.Util.CacheUtil.CreateCache("SMS_" + mobile, 3f / 60, numbers);
 
-        var content = "您的手机短信验证码为" + numbers;
+        var content = "您的短信验证码为" + numbers + "，用于完成手机号快速登录，1分钟内有效";
 
         using (SL.Data.Database db = SL.Data.Database.Open("DMS"))
         {

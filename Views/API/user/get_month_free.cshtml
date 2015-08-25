@@ -36,17 +36,19 @@
                     {
                         var item = new Dictionary<string, object>();
 
-                        var free = db.QuerySingle("select Top 1 FRE_NAME,FRE_TITLE_PIC,FRE_PIC1,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=1 and @p1 between LFC_START_TIME and LFC_END_TIME", userId, i);
+                        var free = db.QuerySingle("select Top 1 FRE_ID,FRE_NAME,FRE_MOBILE_PIC1,FRE_MOBILE_PIC2,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=3 and @p1>=LFC_START_TIME and @p1<LFC_END_TIME", userId, i);
 
                         if (free != null)
                         {
+                            item.Add("FRE_ID", free.FRE_ID);
                             item.Add("FRE_NAME", free.FRE_NAME);
-                            item.Add("FRE_TITLE_PIC", free.FRE_TITLE_PIC);
-                            item.Add("FRE_PIC1", free.FRE_PIC1);
+                            item.Add("FRE_TITLE_PIC", free.FRE_MOBILE_PIC1 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC1 : null);
+                            item.Add("FRE_PIC1", free.FRE_MOBILE_PIC2 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC2 : null);
                             item.Add("LPF_PUR_ID", free.LPF_PUR_ID);
                         }
                         else
                         {
+                            item.Add("FRE_TITLE_PIC", null);
                             item.Add("FRE_PIC1", null);
                         }
 
@@ -70,7 +72,6 @@
                     }
                     i = date;
                 }
-
             }
             else
             {

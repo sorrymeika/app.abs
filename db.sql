@@ -4,17 +4,18 @@ select * from WFree join LFreCnl on LFC_FRE_ID=FRE_ID
 select * from LPspFre
 
 update BPurchase set PUR_PSP_ID=59
-update XProspect set XPS_END_FREE_DT='2015-10-09',XPS_START_FREE_DT='2015-05-09' where XPS_PSP_ID=59
+update XProspect set XPS_END_FREE_DT='2016-10-09',XPS_START_FREE_DT='2015-05-09' where XPS_PSP_ID=59
 
 select XPS_START_FREE_DT,XPS_END_FREE_DT from XProspect where XPS_PSP_ID=59
 select Top 1 FRE_NAME,FRE_TITLE_PIC,FRE_PIC1,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=59) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=1 and GETDATE() between LFC_START_TIME and LFC_END_TIME
 
-
+update XPurchase set XPU_EXPRESS_CODE='asdfasdf'
 
 select * from BProspect
 select * from XProspect
 
 select * from BPurchase
+select * from XPurchase
 select * from RPayStatus
 select * from RPurchaseStatus
 
@@ -103,3 +104,7 @@ select * from BMessage
 select * from LPspMsg
 
 alter table HPoint add HPT_CNL_ID int
+
+alter table LFreCnl add FRE_MOBILE_PIC1 varchar(255)
+alter table LFreCnl add FRE_MOBILE_PIC2 varchar(255)
+

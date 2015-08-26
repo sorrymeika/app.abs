@@ -1,6 +1,6 @@
 ﻿@using SL.Util
 @{
-    var data = SL.Data.SQL.Query("select CNL_DESC,XCL_ADDRESS,XCL_PHONE,CTY_DESC from BChannel join XChannel on CNL_ID=XCL_CNL_ID join RCity on CNL_CTY_ID=CTY_ID where CNL_CLT_ID=3");
+    var data = SL.Data.SQL.Query("select CNL_DESC,XCL_ADDRESS,XCL_PHONE,CTY_DESC from BChannel join XChannel on CNL_ID=XCL_CNL_ID join RCity on CNL_CTY_ID=CTY_ID where CNL_CLT_ID=3 and CNL_DELETED_FLAG = 0");
 
     Json.Write(new { success = true, data = data }, Output);
 }

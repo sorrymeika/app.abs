@@ -13,7 +13,7 @@
       <publishTime>08/05/2015 20:45:30</publishTime>
     </File>
     <File Include="baiduMap.html">
-      <publishTime>08/26/2015 22:03:04</publishTime>
+      <publishTime>08/27/2015 01:24:25</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>01/05/2011 15:45:38</publishTime>
@@ -442,7 +442,7 @@
       <publishTime>08/23/2015 21:58:49</publishTime>
     </File>
     <File Include="Views/API/shop/shop_list.cshtml">
-      <publishTime>08/26/2015 22:03:04</publishTime>
+      <publishTime>08/27/2015 01:11:05</publishTime>
     </File>
     <File Include="Views/API/user/get.cshtml">
       <publishTime>08/26/2015 23:00:46</publishTime>

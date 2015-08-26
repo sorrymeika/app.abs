@@ -14,6 +14,8 @@
         ul, li { list-style: none; }
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
+
+    <script type="text/javascript" src="slan.js"></script>
 </head>
 <body>
     <div id="allmap"></div>
@@ -51,47 +53,119 @@
     };
 </script>
 <script type="text/javascript">
-    // 百度地图API功能
-    var map = new BMap.Map("allmap");
-    map.centerAndZoom(new BMap.Point(121.48789949, 31.24916171), 11);
-    map.addControl(new BMap.ZoomControl());
 
-    navigator.geolocation.getCurrentPosition(function (position) {
-        var coords = position.coords;
+    seajs.use(['zepto', 'core/promise'], function ($, Promise) {
 
-        var point = new BMap.Point(coords.latitude, coords.longitude);
-        map.centerAndZoom(point, 16);
+        /// <summary>
+        /// Radius of the Earth
+        /// </summary>
+        var EarthRadiusKm = 6378.137;
 
-    }, function (error) {
-        //alert("定位失败");
-    });
+        /// <summary>
+        /// 获取两点(经纬度表示)间的距离
+        /// </summary>
+        /// <param name="p1Lat">第一点纬度值</param>
+        /// <param name="p1Lng">第一点经度值</param>
+        /// <param name="p2Lat">第二点纬度值</param>
+        /// <param name="p2Lng">第二点经度值</param>
+        /// <returns>返回两点间距离</returns>
+        function getDistance(p1Lat, p1Lng, p2Lat, p2Lng) {
+            var dLat1InRad = p1Lat * (Math.PI / 180);
+            var dLong1InRad = p1Lng * (Math.PI / 180);
+            var dLat2InRad = p2Lat * (Math.PI / 180);
+            var dLong2InRad = p2Lng * (Math.PI / 180);
+            var dLongitude = dLong2InRad - dLong1InRad;
+            var dLatitude = dLat2InRad - dLat1InRad;
 
-    post('/api/shop/shop_list', function (res) {
-        if (res && res.data) {
-            var html = "";
-            for (var i = 0; i < res.data.length; i++) {
-                var item = res.data[i];
-                html += '<li><b>' + item.CNL_DESC + '</b><span>' + item.XCL_ADDRESS + '</span></li>'
-
-                var myGeo = new BMap.Geocoder();
-                // 将地址解析结果显示在地图上,并调整地图视野
-                myGeo.getPoint(item.XCL_ADDRESS, function (point) {
-                    if (point) {
-                        var marker1 = new BMap.Marker(point, {
-                            icon: new BMap.Icon('http://web.wx.abs.cn/images/store/abslogo.png', new BMap.Size(23, 28)),
-                            offset: new BMap.Size(-13, -15)
-                        });  //创建标注
-                        map.addOverlay(marker1);                 // 将标注添加到地图中
-                        //创建信息窗口
-                        var infoWindow1 = new BMap.InfoWindow(item.CNL_DESC + "<br>" + item.XCL_ADDRESS);
-                        marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
-                        map.centerAndZoom(point, 16);
-                    }
-                }, item.CTY_DESC);
-            }
-
-            document.querySelector('.js_shoplist').innerHTML = html;
+            var a = Math.pow(Math.sin(dLatitude / 2), 2) + Math.cos(dLat1InRad) * Math.cos(dLat2InRad) * Math.pow(Math.sin(dLongitude / 2), 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var dDistance = EarthRadiusKm * c;
+            return dDistance;
         }
 
+        // 百度地图API功能
+        var map = new BMap.Map("allmap");
+        map.centerAndZoom(new BMap.Point(121.48789949, 31.24916171), 11);
+        map.addControl(new BMap.ZoomControl());
+
+        var promise = new Promise();
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var coords = position.coords;
+
+            if (coords.longitude != 0 && coords.latitude != 0) {
+                var point = new BMap.Point(coords.longitude, coords.latitude);
+                map.centerAndZoom(point, 16);
+
+                promise.then(function () {
+                    this.shopList.sort(function (a, b) {
+                        a.Distance = getDistance(a.lat, a.lng, point.lat, point.lng);
+                        b.Distance = getDistance(b.lat, b.lng, point.lat, point.lng);
+
+                        return a.Distance > b.Distance ? 1 : a.Distance == b.Distance ? 0 : -1;
+                    });
+
+                    var html = '';
+
+                    for (var i = 0, len = Math.min(this.shopList.length, 5) ; i < len; i++) {
+                        var item = this.shopList[i];
+                        html += '<li><b>' + item.CNL_DESC + '</b><span>' + item.XCL_ADDRESS + '</span></li>'
+                    }
+
+                    document.querySelector('.js_shoplist').innerHTML = html;
+                });
+            }
+
+        }, function (error) {
+            alert("定位失败");
+        });
+
+
+        $.post('/api/shop/shop_list', function (res) {
+            if (res && res.data) {
+                var html = "";
+
+                var promise1 = new Promise().resolve();
+
+                promise.shopList = res.data;
+
+                promise1.start(res.data.length).then(function () {
+                    promise.resolve();
+                });
+
+                res.data.forEach(function (item, i) {
+
+                    html += '<li><b>' + item.CNL_DESC + '</b><span>' + item.XCL_ADDRESS + '</span></li>'
+
+                    var myGeo = new BMap.Geocoder();
+                    // 将地址解析结果显示在地图上,并调整地图视野
+                    myGeo.getPoint(item.XCL_ADDRESS, function (point) {
+                        if (point) {
+                            var marker1 = new BMap.Marker(point, {
+                                icon: new BMap.Icon('http://web.wx.abs.cn/images/store/abslogo.png', new BMap.Size(23, 28)),
+                                offset: new BMap.Size(-13, -15)
+                            });  //创建标注
+                            map.addOverlay(marker1);                 // 将标注添加到地图中
+                            //创建信息窗口
+                            var infoWindow1 = new BMap.InfoWindow(item.CNL_DESC + "<br>" + item.XCL_ADDRESS);
+                            marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
+                            //map.centerAndZoom(point, 16);
+
+                            item.point = point;
+
+                            //item.Distance = getDistance(p1.lat, p1.lng, point.lat, point.lng);
+                        }
+                        promise1.next(i);
+
+                    }, item.CTY_DESC);
+                });
+
+                document.querySelector('.js_shoplist').innerHTML = html;
+            }
+
+        }, 'json');
+
     });
+
+
 </script>

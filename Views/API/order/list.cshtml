@@ -24,16 +24,21 @@
         string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5";
         List<object> parameters = new List<object>() { userId };
 
-        if (status != 0)
+        if (status == 0 && payStatus == 3)
         {
-            where += " and PUR_PUS_ID=@p" + parameters.Count;
-            parameters.Add(status);
+            where += " and PUR_PUS_ID=1 and PUR_PAS_ID=1";
         }
-
-        if (payStatus != 0)
+        else if (status == 18 && payStatus == 0)
         {
-            where += " and PUR_PAS_ID=@p" + parameters.Count;
-            parameters.Add(payStatus);
+            where += " and (PUR_PUS_ID=25 or PUR_PUS_ID=2 or PUR_PAS_ID=2)";
+        }
+        else if (status == 19 && payStatus == 0)
+        {
+            where += " and PUR_PUS_ID in (6,11,18,19)";
+        }
+        else if (status == 8 && payStatus == 0)
+        {
+            where += " and (PUR_PUS_ID=8 or PUR_PUS_ID=9 or PUR_PUS_ID=20 or PUR_PUS_ID=30)";
         }
 
         using (SL.Data.Database db = SL.Data.Database.Open())

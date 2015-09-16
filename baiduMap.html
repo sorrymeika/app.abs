@@ -8,9 +8,10 @@
         #allmap { width: 100%; height: 300px; }
         p { margin-left: 5px; font-size: 14px; }
         .shoplist { padding: 10px; }
-        .shoplist > li { line-height: 1.5; border-bottom: 1px solid #ddd; padding: 10px; }
+        .shoplist > li { line-height: 1.5; border-bottom: 1px solid #ddd; padding: 10px; position: relative; }
         .shoplist > li > b { font-size: 16px; display: block; padding-bottom: 5px; }
         .shoplist > li > span { font-size: 13px; display: block; }
+        .shoplist > li > span ~ span { position: absolute; right: 4px; top: 8px; color: #999; }
         ul, li { list-style: none; }
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
@@ -53,9 +54,7 @@
     };
 </script>
 <script type="text/javascript">
-
-    seajs.use(['zepto', 'core/promise'], function ($, Promise) {
-
+    seajs.use(['zepto', 'core/promise', 'util'], function ($, Promise, util) {
         /// <summary>
         /// Radius of the Earth
         /// </summary>
@@ -90,33 +89,58 @@
 
         var promise = new Promise();
 
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var coords = position.coords;
-
+        var onPositionChange = function (coords) {
             if (coords.longitude != 0 && coords.latitude != 0) {
                 var point = new BMap.Point(coords.longitude, coords.latitude);
-                map.centerAndZoom(point, 16);
+                map.centerAndZoom(point, 13);
+
+                var marker1 = new BMap.Marker(point);  //创建标注
+                map.addOverlay(marker1);
 
                 promise.then(function () {
-                    this.shopList.sort(function (a, b) {
-                        a.Distance = getDistance(a.lat, a.lng, point.lat, point.lng);
-                        b.Distance = getDistance(b.lat, b.lng, point.lat, point.lng);
 
-                        return a.Distance > b.Distance ? 1 : a.Distance == b.Distance ? 0 : -1;
+                    this.shopList.sort(function (a, b) {
+                        try {
+                            a.Distance = getDistance(a.point.lat, a.point.lng, point.lat, point.lng);
+                            b.Distance = getDistance(b.point.lat, b.point.lng, point.lat, point.lng);
+
+                            return a.Distance < b.Distance ? -1 : a.Distance == b.Distance ? 0 : 1;
+
+                        } catch (e) {
+                            return 0;
+                        }
                     });
+
+                    var a = this.shopList[0];
 
                     var html = '';
 
                     for (var i = 0, len = Math.min(this.shopList.length, 5) ; i < len; i++) {
                         var item = this.shopList[i];
-                        html += '<li><b>' + item.CNL_DESC + '</b><span>' + item.XCL_ADDRESS + '</span></li>'
+                        html += '<li data-longitude="' + item.point.lng + '" data-latitude="' + item.point.lat + '"><b>' + item.STR_NAME + '</b><span>' + item.STR_ADDRESS + '</span><span>' + (item.Distance < 1 ? Math.round(item.Distance * 100) + 'm' : (Math.round(item.Distance * 100) / 100 + 'km')) + '</span></li>'
                     }
 
                     document.querySelector('.js_shoplist').innerHTML = html;
                 });
             }
+        }
 
-        }, function (error) {
+        $('.js_shoplist').on('click', 'li[data-longitude]', function (e) {
+            var $target = $(e.currentTarget);
+            var point = new BMap.Point($target.data('longitude'), $target.data('latitude'));
+            map.centerAndZoom(point, 13);
+        })
+
+        var checkPosition = function () {
+            if (location.hash) {
+                //onPositionChange();
+            }
+        }
+
+        $(window).on('hashchange', checkPosition);
+        checkPosition();
+
+        navigator.geolocation.getCurrentPosition(function (position) { var coords = position.coords; onPositionChange(coords); }, function (error) {
             alert("定位失败");
         });
 
@@ -135,11 +159,19 @@
 
                 res.data.forEach(function (item, i) {
 
-                    html += '<li><b>' + item.CNL_DESC + '</b><span>' + item.XCL_ADDRESS + '</span></li>'
+                    var arr = item.STR_GEO.split(',');
+
+                    item.point = {
+                        lng: parseFloat(arr[0]),
+                        lat: parseFloat(arr[1])
+                    };
+
+                    html += '<li data-longitude="' + item.point.lng + '" data-latitude="' + item.point.lat + '"><b>' + item.STR_NAME + '</b><span>' + item.STR_ADDRESS + '</span></li>';
 
                     var myGeo = new BMap.Geocoder();
                     // 将地址解析结果显示在地图上,并调整地图视野
-                    myGeo.getPoint(item.XCL_ADDRESS, function (point) {
+                    myGeo.getPoint(item.STR_ADDRESS, function (point) {
+                        console.log(point)
                         if (point) {
                             var marker1 = new BMap.Marker(point, {
                                 icon: new BMap.Icon('http://web.wx.abs.cn/images/store/abslogo.png', new BMap.Size(23, 28)),
@@ -147,7 +179,7 @@
                             });  //创建标注
                             map.addOverlay(marker1);                 // 将标注添加到地图中
                             //创建信息窗口
-                            var infoWindow1 = new BMap.InfoWindow(item.CNL_DESC + "<br>" + item.XCL_ADDRESS);
+                            var infoWindow1 = new BMap.InfoWindow(item.STR_NAME + "<br>" + item.STR_ADDRESS);
                             marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
                             //map.centerAndZoom(point, 16);
 
@@ -157,7 +189,7 @@
                         }
                         promise1.next(i);
 
-                    }, item.CTY_DESC);
+                    }, item.STR_REGION);
                 });
 
                 document.querySelector('.js_shoplist').innerHTML = html;

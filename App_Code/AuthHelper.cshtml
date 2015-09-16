@@ -7,6 +7,11 @@
         {
             var user = SL.Data.SQL.QuerySingle("select USL_PASSWORD,USL_LOGINNAME from WUserLogin where USL_PSP_ID=@p0", userId);
 
+            if (user == null)
+            {
+                return false;
+            }
+
             cacheAuth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(user.USL_LOGINNAME + user.USL_PASSWORD + SL.Util.Config.PrivateKey + DateTime.Now.AddMonths(-1).ToString("yyyyMM"), "md5");
             string currentAuth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(user.USL_LOGINNAME + user.USL_PASSWORD + SL.Util.Config.PrivateKey + DateTime.Now.ToString("yyyyMM"), "md5");
 

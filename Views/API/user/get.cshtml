@@ -13,7 +13,7 @@
     }
     else if (!AuthHelper.Check(userId, auth, out newAuth))
     {
-        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+        Json.Write(new { success = false, msg = "登录过期，请重新登录", error_code = 503 }, Output);
     }
     else
     {
@@ -24,6 +24,11 @@
             if (!string.IsNullOrEmpty(newAuth))
             {
                 data.Auth = newAuth;
+            }
+
+            if (data.Points == null)
+            {
+                data.Points = 0;
             }
 
             string vdpMessage = null;

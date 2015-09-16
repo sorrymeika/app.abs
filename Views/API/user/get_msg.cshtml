@@ -23,7 +23,7 @@
         {
             int total;
             var data = db.QueryPage("MSG_ID",
-                "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_READ_DT",
+                "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_READ_DT,MSG_ALL_FLAG",
                 "BMessage left join LPspMsg on MSG_ID=LPM_MSG_ID",
                 "((MSG_ALL_FLAG=0 and LPM_PSP_ID=@p1) or MSG_ALL_FLAG=1) and @p0 between MSG_START_DT and MSG_END_DT",
                 page,
@@ -31,6 +31,28 @@
                 new object[] { DateTime.Now, userId },
                 out total,
                 new Dictionary<string, bool> { { "MSG_DT", false } });
+
+            if (data != null)
+            {
+                data.All(a =>
+                {
+                    if (a.MSG_ALL_FLAG == false)
+                    {
+                        if (a.LPM_STATUS == 0)
+                        {
+                            db.Execute("update LPspMsg set LPM_STATUS=1 where LPM_MSG_ID=@p0 and LPM_PSP_ID=@p1", a.MSG_ID, userId);
+                        }
+                    }
+                    else
+                    {
+                        if (a.LPM_STATUS == null)
+                        {
+                            db.Execute("insert into LPspMsg (LPM_STATUS,LPM_MSG_ID,LPM_PSP_ID) values (1,@p0,@p1)", a.MSG_ID, userId);
+                        }
+                    }
+                    return true;
+                });
+            }
 
             Json.Write(new { success = true, data = data, total = total }, Output);
         }

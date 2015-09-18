@@ -21,7 +21,7 @@
     else
     {
         int total;
-        string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5";
+        string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID!=7 and CNL_CLT_ID!=8";
         List<object> parameters = new List<object>() { userId };
 
         if (status == 0 && payStatus == 3)
@@ -30,7 +30,7 @@
         }
         else if (status == 18 && payStatus == 0)
         {
-            where += " and (PUR_PUS_ID=25 or PUR_PUS_ID=2 or PUR_PAS_ID=2)";
+            where += " and (PUR_PUS_ID=25 or PUR_PUS_ID=2 or (PUR_PAS_ID=2 and PUR_PUS_ID=1))";
         }
         else if (status == 19 && payStatus == 0)
         {
@@ -57,6 +57,11 @@
             {
                 data.All(item =>
                 {
+                    if (item.PUR_AMOUNT == null)
+                    {
+                        item.PUR_AMOUNT = 0;
+                    }
+
                     IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_DISCONTINUED_FLAG,MSP_DISCONTINUED_FLAG,WPP_PRD_ID,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join BProdHeader on PRH_ID=PRD_PRH_ID left join WProductPicture on WPP_PRD_ID=PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRH_PRT_ID=1 and LPK_PUR_ID=@p0 and PRD_ID!=100000", item.PUR_ID);
 
                     item.Children = children;
@@ -71,7 +76,7 @@
                             }
                             prd.WPP_LIST_PIC = System.Configuration.ConfigurationManager.AppSettings["Media"] + prd.WPP_LIST_PIC;
                             prd.PRD_SPEC = prd.PRD_SPEC.Split('|')[0];
-                            prd.Url = "http://m.abs.cn/#/item/" + prd.PRD_ID + ".html";
+                            prd.Url = "http://m.abs.cn/single/" + prd.PRD_ID + ".html";
                             return true;
                         });
                     }

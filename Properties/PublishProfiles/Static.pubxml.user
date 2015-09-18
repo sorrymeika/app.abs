@@ -430,7 +430,7 @@
       <publishTime>07/22/2015 10:05:02</publishTime>
     </File>
     <File Include="Views/API/order/list.cshtml">
-      <publishTime>09/16/2015 16:52:42</publishTime>
+      <publishTime>09/18/2015 15:58:06</publishTime>
     </File>
     <File Include="Views/API/quan/list.cshtml">
       <publishTime>07/27/2015 09:21:37</publishTime>

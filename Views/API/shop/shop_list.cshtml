@@ -1,6 +1,6 @@
 ﻿@using SL.Util
 @{
-    var data = SL.Data.SQL.Query("select * from WSTORE");
+    var data = SL.Data.SQL.Query("select * from WSTORE where STR_STATUS=0");
 
     Json.Write(new { success = true, data = data }, Output);
 }

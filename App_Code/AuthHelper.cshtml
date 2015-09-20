@@ -1,29 +1,30 @@
 ﻿@functions{
     public static bool Check(int userId, string auth, out string newAuth)
     {
-        newAuth = null;
         string cacheAuth = SL.Util.CacheUtil.Get<string>("U" + userId);
-        if (string.IsNullOrEmpty(cacheAuth))
+        if (string.IsNullOrEmpty(cacheAuth) || cacheAuth != auth)
         {
             var user = SL.Data.SQL.QuerySingle("select USL_PASSWORD,USL_LOGINNAME from WUserLogin where USL_PSP_ID=@p0", userId);
 
             if (user == null)
             {
+                newAuth = null;
                 return false;
             }
 
             cacheAuth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(user.USL_LOGINNAME + user.USL_PASSWORD + SL.Util.Config.PrivateKey + DateTime.Now.AddMonths(-1).ToString("yyyyMM"), "md5");
-            string currentAuth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(user.USL_LOGINNAME + user.USL_PASSWORD + SL.Util.Config.PrivateKey + DateTime.Now.ToString("yyyyMM"), "md5");
+
+            newAuth = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(user.USL_LOGINNAME + user.USL_PASSWORD + SL.Util.Config.PrivateKey + DateTime.Now.ToString("yyyyMM"), "md5");
 
             if (cacheAuth != auth)
             {
-                cacheAuth = currentAuth;
+                cacheAuth = newAuth;
             }
-            else
-            {
-                newAuth = currentAuth;
-            }
-            SL.Util.CacheUtil.CreateCache("U" + userId, currentAuth);
+            SL.Util.CacheUtil.CreateCache("U" + userId, newAuth);
+        }
+        else
+        {
+            newAuth = null;
         }
 
         if (cacheAuth != auth)

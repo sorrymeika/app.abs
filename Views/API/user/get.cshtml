@@ -38,20 +38,23 @@
                 {
                     if (string.IsNullOrEmpty(data.XPS_MOBILE_IMEI))
                     {
-                        var vdp = db.QuerySingle("select VDP_ID,VDP_DESC,VDP_MESSAGE,VDP_VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join BVoucherActivity on VDP_VCA_ID=VCA_ID where VDP_ID=1 and VDP_VALID_FLAG=1");
+                        var vdpList = db.Query("select VDP_ID,VDP_DESC,VDP_MESSAGE,VDP_VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join BVoucherActivity on VDP_VCA_ID=VCA_ID where VDP_ID=1 and VDP_VALID_FLAG=1");
 
-                        if (vdp != null)
+                        if (vdpList != null && vdpList.Count != 0)
                         {
-                            vdpMessage = vdp.VDP_MESSAGE;
-
-                            db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4)", vdp.VDP_VCA_ID, vdp.VDP_ID, RandomUtil.Create(8), vdp.VCA_START_DT, vdp.VCA_END_DT);
+                            vdpMessage = vdpList[0].VDP_MESSAGE;
 
                             using (SL.Data.Database dba = SL.Data.Database.Open("MS_ABS"))
                             {
-                                int msgId;
-                                dba.Execute("insert into BMessage (MSG_RMT_ID,MSG_ALL_FLAG,MSG_DESC,MSG_TITLE,MSG_CONTENT,MSG_START_DT,MSG_END_DT,MSG_DT) values (5,0,@p0,@p0,@p1,@p2,@p3,GetDate())", out msgId, vdp.VDP_DESC, vdp.VDP_MESSAGE, DateTime.Now, DateTime.Now.AddMonths(60));
+                                foreach (var vdp in vdpList)
+                                {
+                                    db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4)", vdp.VDP_VCA_ID, vdp.VDP_ID, RandomUtil.Create(8), vdp.VCA_START_DT, vdp.VCA_END_DT);
 
-                                dba.Execute("insert into LPspMsg (LPM_TITLE,LPM_MSG_ID,LPM_PSP_ID,LPM_MDT_ID,LPM_STATUS,LPM_START_DT,LPM_END_DT,LPM_CREATION_DT) values ('',@p0,@p1,4,0,@p2,@p3,GetDate())", msgId, userId, DateTime.Now, DateTime.Now.AddMonths(60));
+                                    int msgId;
+                                    dba.Execute("insert into BMessage (MSG_RMT_ID,MSG_ALL_FLAG,MSG_DESC,MSG_TITLE,MSG_CONTENT,MSG_START_DT,MSG_END_DT,MSG_DT) values (5,0,@p0,@p0,@p1,@p2,@p3,GetDate())", out msgId, vdp.VDP_DESC, vdp.VDP_MESSAGE, DateTime.Now, DateTime.Now.AddMonths(60));
+
+                                    dba.Execute("insert into LPspMsg (LPM_TITLE,LPM_MSG_ID,LPM_PSP_ID,LPM_MDT_ID,LPM_STATUS,LPM_START_DT,LPM_END_DT,LPM_CREATION_DT) values ('',@p0,@p1,4,0,@p2,@p3,GetDate())", msgId, userId, DateTime.Now, DateTime.Now.AddMonths(60));
+                                }
                             }
                         }
                     }

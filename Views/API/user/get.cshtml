@@ -19,7 +19,7 @@
     {
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.QuerySingle("select PSP_ID as UserID,PSP_CODE as Mobile,PSP_NAME as UserName,PSP_REGISTRATION_DT,XPS_TOTAL_AMOUNT as Amount,XPS_BIRTH_DT as BirthDay,XPS_GND_ID as Gender,XPS_FAMILY_SIZE as FamilySize,XPS_CHILD_FLAG as HasChild,XPS_CHILD_BIRTH_DT as ChildBirthDay,XPS_CTY_ID as CityID,CTY_DESC as CityName,CTY_PRV_ID as ProvID,XPS_AVAILABLEPOINTS as Points,XPS_START_FREE_DT,XPS_END_FREE_DT,XPS_MOBILE_IMEI from BProspect join XProspect on PSP_ID=XPS_PSP_ID left join RCity on CTY_ID=XPS_CTY_ID where PSP_ID=@p0", userId);
+            var data = db.QuerySingle("select PSP_ID as UserID,PSP_CODE as Mobile,PSP_NAME as UserName,PSP_REGISTRATION_DT,XPS_EFFICTIVE_AMOUNT as Amount,XPS_BIRTH_DT as BirthDay,XPS_GND_ID as Gender,XPS_FAMILY_SIZE as FamilySize,XPS_CHILD_FLAG as HasChild,XPS_CHILD_BIRTH_DT as ChildBirthDay,XPS_CTY_ID as CityID,CTY_DESC as CityName,CTY_PRV_ID as ProvID,XPS_AVAILABLEPOINTS as Points,XPS_START_FREE_DT,XPS_END_FREE_DT,XPS_MOBILE_IMEI from BProspect join XProspect on PSP_ID=XPS_PSP_ID left join RCity on CTY_ID=XPS_CTY_ID where PSP_ID=@p0", userId);
 
             if (!string.IsNullOrEmpty(newAuth))
             {

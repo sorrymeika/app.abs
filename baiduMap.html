@@ -12,49 +12,29 @@
         .shoplist > li > b { font-size: 16px; display: block; padding-bottom: 5px; }
         .shoplist > li > span { font-size: 13px; display: block; }
         .shoplist > li > span ~ span { position: absolute; right: 4px; top: 8px; color: #999; }
+        .search { background: #fff; border: 0; display: -webkit-box; position: absolute; top: 10px; right: 20px; left: 20px; height: 38px; border-radius: 4px; }
+        .js_shopname { background: #fff; border: 0; -webkit-box-flex: 1; height: 100%; display: block; padding-left: 15px; }
         ul, li { list-style: none; }
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
-
     <script type="text/javascript" src="slan.js"></script>
 </head>
 <body>
     <div id="allmap"></div>
-    <ul class="js_shoplist shoplist"></ul>
+    <div class="search"><input class="js_shopname" placeholder="搜索" sn-model="search" /></div>
+    <ul class="js_shoplist shoplist">
+        <li sn-repeat="item in data" sn-binding="data-longitude:item.point.lng,data-latitude:item.point.lat"><b sn-binding="html:item.STR_NAME"></b><span sn-binding="html:item.STR_ADDRESS"></span><span sn-binding="html:item|eval:'!$0.Distance?\'\':$0.Distance < 1 ? Math.round($0.Distance * 100) + \'m\' : (Math.round($0.Distance * 100) / 100 + \'km\')'"></span></li>
+    </ul>
 </body>
 </html>
-<script>
-    var post = function (url, data, callback) {
-        if (typeof data === 'function') callback = data, data = null;
-
-        var xhr = new XMLHttpRequest();
-        if (!data)
-            xhr.open('GET', url, true);
-        else {
-            xhr.open('POST', url, true);
-            if (typeof data !== "string") {
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                var post = [];
-                for (var k in data) {
-                    post.push(k + '=' + encodeURIComponent(data[k]))
-                }
-                data = post.join('&');
-            } else {
-
-                xhr.setRequestHeader("Content-Type", "application/json");
-            }
-        }
-
-        xhr.onreadystatechange = function (e) {
-            if (this.readyState == 4 && this.status == 200) {
-                callback(JSON.parse(this.responseText));
-            }
-        };
-        xhr.send(data);
-    };
-</script>
 <script type="text/javascript">
-    seajs.use(['zepto', 'core/promise', 'util'], function ($, Promise, util) {
+    seajs.config({
+        alias: {
+            $: 'zepto'
+        }
+    })
+
+    seajs.use(['$', 'core/promise', 'core/model', 'util'], function ($, Promise, vmodel, util) {
         /// <summary>
         /// Radius of the Earth
         /// </summary>
@@ -81,6 +61,10 @@
             var dDistance = EarthRadiusKm * c;
             return dDistance;
         }
+
+        var model = new vmodel.ViewModel($(document.body), {});
+        model.on('change:search', function (e, text) {
+        })
 
         // 百度地图API功能
         var map = new BMap.Map("allmap");
@@ -115,12 +99,13 @@
 
                     var html = '';
 
+                    model.set('data', this.shopList);
+
                     for (var i = 0, len = Math.min(this.shopList.length, 5) ; i < len; i++) {
                         var item = this.shopList[i];
                         html += '<li data-longitude="' + item.point.lng + '" data-latitude="' + item.point.lat + '"><b>' + item.STR_NAME + '</b><span>' + item.STR_ADDRESS + '</span><span>' + (item.Distance < 1 ? Math.round(item.Distance * 100) + 'm' : (Math.round(item.Distance * 100) / 100 + 'km')) + '</span></li>'
                     }
 
-                    document.querySelector('.js_shoplist').innerHTML = html;
                 });
             }
         }
@@ -192,7 +177,7 @@
                     }, item.STR_REGION);
                 });
 
-                document.querySelector('.js_shoplist').innerHTML = html;
+                model.set('data', res.data);
             }
 
         }, 'json');

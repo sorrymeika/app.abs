@@ -55,6 +55,10 @@
 
             if (data != null)
             {
+                var userData = db.QuerySingle("select USL_LOGINNAME,USL_PASSWORD from WUserLogin where USL_PSP_ID=@p0", userId);
+
+                string queryString = "?src=8003&u=" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
+
                 data.All(item =>
                 {
                     if (item.PUR_AMOUNT == null)
@@ -92,7 +96,7 @@
                             }
                             prd.WPP_LIST_PIC = System.Configuration.ConfigurationManager.AppSettings["Media"] + prd.WPP_LIST_PIC;
                             prd.PRD_SPEC = prd.PRD_SPEC.Split('|')[0];
-                            prd.Url = "http://m.abs.cn/single/" + prd.PRD_ID + ".html";
+                            prd.Url = "http://m.abs.cn/single/" + prd.PRD_ID + ".html" + queryString;
                             return true;
                         });
                     }

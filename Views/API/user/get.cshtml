@@ -80,7 +80,9 @@
 
             data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase left join BChannel on PUR_CNL_ID=CNL_ID where PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5", userId);
 
-            data.OpenUrl = "http://m.abs.cn";
+            var userData = db.QuerySingle("select USL_LOGINNAME,USL_PASSWORD from WUserLogin where USL_PSP_ID=@p0", userId);
+
+            data.OpenUrl = "http://m.abs.cn?src=8003&u=" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
 
             Json.Write(new { success = true, data = data, vdpMessage = vdpMessage }, Output);
         }

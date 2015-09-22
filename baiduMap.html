@@ -17,13 +17,17 @@
         ul, li { list-style: none; }
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
-    <script type="text/javascript" src="slan.js"></script>
+
+     <script type="text/javascript" src="slan.js"></script>
+
+    <!--<script src="http://192.168.0.104:5559/webresource/js/seajs/sea.js?v1442931637809"></script>
+    <script src="http://192.168.0.104:5559/webresource/js/zepto.js"></script>-->
 </head>
 <body>
     <div id="allmap"></div>
     <div class="search"><input class="js_shopname" placeholder="搜索" sn-model="search" /></div>
     <ul class="js_shoplist shoplist">
-        <li sn-repeat="item in data" sn-binding="data-longitude:item.point.lng,data-latitude:item.point.lat"><b sn-binding="html:item.STR_NAME"></b><span sn-binding="html:item.STR_ADDRESS"></span><span sn-binding="html:item|eval:'!$0.Distance?\'\':$0.Distance < 1 ? Math.round($0.Distance * 100) + \'m\' : (Math.round($0.Distance * 100) / 100 + \'km\')'"></span></li>
+        <li sn-repeat="item in data|filter:contains(item.STR_ADDRESS,search)" sn-binding="data-longitude:item.point.lng,data-latitude:item.point.lat"><b sn-binding="html:item.STR_NAME"></b><span sn-binding="html:item.STR_ADDRESS"></span><span sn-binding="html:item|eval:'!$0.Distance?\'\':$0.Distance < 1 ? Math.round($0.Distance * 100) + \'m\' : (Math.round($0.Distance * 100) / 100 + \'km\')'"></span></li>
     </ul>
 </body>
 </html>
@@ -62,9 +66,9 @@
             return dDistance;
         }
 
-        var model = new vmodel.ViewModel($(document.body), {});
-        model.on('change:search', function (e, text) {
-        })
+        var model = new vmodel.ViewModel($(document.body), {
+            search: ''
+        });
 
         // 百度地图API功能
         var map = new BMap.Map("allmap");
@@ -156,7 +160,6 @@
                     var myGeo = new BMap.Geocoder();
                     // 将地址解析结果显示在地图上,并调整地图视野
                     myGeo.getPoint(item.STR_ADDRESS, function (point) {
-                        console.log(point)
                         if (point) {
                             var marker1 = new BMap.Marker(point, {
                                 icon: new BMap.Icon('http://web.wx.abs.cn/images/store/abslogo.png', new BMap.Size(23, 28)),

@@ -38,7 +38,7 @@
                 {
                     if (string.IsNullOrEmpty(data.XPS_MOBILE_IMEI))
                     {
-                        var vdpList = db.Query("select VDP_ID,VDP_DESC,VDP_MESSAGE,VDP_VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join BVoucherActivity on VDP_VCA_ID=VCA_ID where VDP_ID=1 and VDP_VALID_FLAG=1");
+                        var vdpList = db.Query("select VDP_ID,VDP_DESC,VDP_MESSAGE,VDP_VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join BVoucherActivity on VDP_VCA_ID=VCA_ID where VDP_ID in (1,2) and VDP_VALID_FLAG=1");
 
                         if (vdpList != null && vdpList.Count != 0)
                         {

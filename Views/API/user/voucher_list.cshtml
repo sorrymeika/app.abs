@@ -22,8 +22,10 @@
 
         if (!string.IsNullOrEmpty(status))
         {
+            /*
             where += " and CSV_USE_FLAG=@p" + parameters.Count;
             parameters.Add(req.Int("status"));
+            */
         }
 
         using (SL.Data.Database db = SL.Data.Database.Open())

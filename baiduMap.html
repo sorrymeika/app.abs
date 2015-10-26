@@ -18,7 +18,7 @@
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=ruKePGl5aEpASfCZtQm6a2U5&v=1.0"></script>
 
-     <script type="text/javascript" src="slan.js"></script>
+    <script type="text/javascript" src="slan.js?v1"></script>
 
     <!--<script src="http://192.168.0.104:5559/webresource/js/seajs/sea.js?v1442931637809"></script>
     <script src="http://192.168.0.104:5559/webresource/js/zepto.js"></script>-->
@@ -27,7 +27,7 @@
     <div id="allmap"></div>
     <div class="search"><input class="js_shopname" placeholder="搜索" sn-model="search" /></div>
     <ul class="js_shoplist shoplist">
-        <li sn-repeat="item in data|filter:contains(item.STR_ADDRESS,search)" sn-binding="data-longitude:item.point.lng,data-latitude:item.point.lat"><b sn-binding="html:item.STR_NAME"></b><span sn-binding="html:item.STR_ADDRESS"></span><span sn-binding="html:item|eval:'!$0.Distance?\'\':$0.Distance < 1 ? Math.round($0.Distance * 100) + \'m\' : (Math.round($0.Distance * 100) / 100 + \'km\')'"></span></li>
+        <li sn-repeat="item in data|filter:contains(item.STR_ADDRESS,search)" data-longitude="{{item.point.lng}}" data-latitude="{{item.point.lat}}"><b>{{item.STR_NAME}}</b><span>{{item.STR_ADDRESS}}</span><span sn-binding="html:item|eval:'!$0.Distance?\'\':$0.Distance < 1 ? Math.round($0.Distance * 100) + \'m\' : (Math.round($0.Distance * 100) / 100 + \'km\')'">{{!item.Distance?'':item.Distance < 1 ? Math.round(item.Distance * 100)+"m": (Math.round(item.Distance * 100) / 100 + 'km')}}</span></li>
     </ul>
 </body>
 </html>
@@ -38,7 +38,7 @@
         }
     })
 
-    seajs.use(['$', 'core/promise', 'core/model', 'util'], function ($, Promise, vmodel, util) {
+    seajs.use(['$', 'core/promise', 'core/model2', 'util'], function ($, Promise, vmodel, util) {
         /// <summary>
         /// Radius of the Earth
         /// </summary>
@@ -102,7 +102,7 @@
                     var a = this.shopList[0];
 
                     var html = '';
-                    var result=[];
+                    var result = [];
 
                     for (var i = 0, len = Math.min(this.shopList.length, 5) ; i < len; i++) {
                         var item = this.shopList[i];
@@ -124,17 +124,20 @@
 
         var checkPosition = function () {
             if (location.hash) {
-                //onPositionChange();
+                onPositionChange({
+                    longitude: parseFloat(location.hash.match(/longitude=([^&]+)/)[1]),
+                    latitude: parseFloat(location.hash.match(/latitude=([^&]+)/)[1])
+                });
             }
         }
 
         $(window).on('hashchange', checkPosition);
         checkPosition();
-
-        navigator.geolocation.getCurrentPosition(function (position) { var coords = position.coords; onPositionChange(coords); }, function (error) {
-            alert("定位失败");
-        });
-
+        if (util.android || location.search == "?v2") {
+            navigator.geolocation.getCurrentPosition(function (position) { var coords = position.coords; onPositionChange(coords); }, function (error) {
+                alert("定位失败");
+            });
+        }
 
         $.post('/api/shop/shop_list', function (res) {
             if (res && res.data) {
@@ -181,7 +184,6 @@
 
                     }, item.STR_REGION);
                 });
-
                 model.set('data', res.data);
             }
 

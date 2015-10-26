@@ -163,6 +163,8 @@
     <Content Include="Views\API\user\get_month_free.cshtml" />
     <Content Include="Views\API\shop\shop_list.cshtml" />
     <Content Include="Views\API\settings\update.cshtml" />
+    <Content Include="Views\API\settings\get_update.cshtml" />
+    <Content Include="Views\API\manage\set_update.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

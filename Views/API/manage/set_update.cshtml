@@ -1,0 +1,34 @@
+﻿@using SL.Util
+@{
+    SL.Util.RequestUtil req = new SL.Util.RequestUtil();
+    string version = req.String("Version");
+    string iosUrl = req.String("IOSUrl");
+    string androidUrl = req.String("AndroidUrl");
+    string content = req.String("Content");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+
+    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_version_settings");
+
+    var info = setting.FirstOrDefault();
+
+    if (info == null)
+    {
+        info = new Dictionary<string, object>();
+        setting.Add(info);
+    }
+
+    info["Version"] = version;
+    info["IOSUrl"] = iosUrl;
+    info["AndroidUrl"] = androidUrl;
+    info["Content"] = content;
+
+    setting.Save();
+
+    Json.Write(new { success = true, data = info }, Output);
+
+}

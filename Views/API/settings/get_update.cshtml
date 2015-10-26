@@ -1,0 +1,15 @@
+﻿@using SL.Util
+@{
+    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_version_settings");
+
+    var info = setting.FirstOrDefault();
+
+    if (info != null)
+    {
+        Json.Write(new { success = true, data = info }, Output);
+    }
+    else
+    {
+        Json.Write(new { success = false, ua = Request.UserAgent }, Output);
+    }
+}

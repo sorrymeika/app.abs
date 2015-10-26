@@ -4,12 +4,16 @@
 
     string version = req.String("version");
 
-    if (version != "1.0.0")
+    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_version_settings");
+
+    var info = setting.FirstOrDefault();
+
+    if (info != null && version != (string)info["Version"])
     {
-        Json.Write(new { success = true, updateUrl = "htasdfasdf", text = "adsfasdf" }, Output);
+        Json.Write(new { success = true, updateUrl = System.Text.RegularExpressions.Regex.IsMatch(Request.UserAgent, @"Android") ? info["IOSUrl"] : info["AndroidUrl"], versionName = "abs_" + (string)info["Version"], text = info["Content"] }, Output);
     }
     else
     {
-        Json.Write(new { success = false }, Output);
+        Json.Write(new { success = false, ua = Request.UserAgent }, Output);
     }
 }

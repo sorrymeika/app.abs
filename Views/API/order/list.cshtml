@@ -57,7 +57,7 @@
             {
                 var userData = db.QuerySingle("select USL_LOGINNAME,USL_PASSWORD from WUserLogin where USL_PSP_ID=@p0", userId);
 
-                string queryString = "?src=8003&u=" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
+                string queryString = "?from=native&src=8003&u=" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
 
                 data.All(item =>
                 {

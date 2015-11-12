@@ -67,10 +67,12 @@
             if (data.XPS_END_FREE_DT != null && data.XPS_START_FREE_DT != null)
             {
                 var date = data.XPS_START_FREE_DT > DateTime.Today ? data.XPS_START_FREE_DT : DateTime.Today;
+                data.TotalMonths = Math.Max(0, data.XPS_END_FREE_DT.Month - ((data.XPS_START_FREE_DT.Year - data.XPS_END_FREE_DT.Year) * 12 + data.XPS_START_FREE_DT.Month));
                 data.FreeMonths = Math.Max(0, data.XPS_END_FREE_DT.Month - ((date.Year - data.XPS_END_FREE_DT.Year) * 12 + date.Month));
             }
             else
             {
+                data.TotalMonths = 0;
                 data.FreeMonths = 0;
             }
 

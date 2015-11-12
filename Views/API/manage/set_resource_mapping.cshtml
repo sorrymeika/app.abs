@@ -1,0 +1,39 @@
+﻿@using SL.Util
+@{
+    SL.Util.RequestUtil req = new SL.Util.RequestUtil();
+    string key = req.String("Key");
+    string value = req.String("Value");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+
+    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_resource_settings");
+
+    var info = setting.FirstOrDefault();
+
+    if (info == null)
+    {
+        info = new Dictionary<string, object>();
+        setting.Add(info);
+    }
+
+    if (string.IsNullOrEmpty(value))
+    {
+        if (info.ContainsKey(key))
+        {
+            info.Remove(key);
+        }
+    }
+    else
+    {
+        info[key] = value;
+    }
+
+    setting.Save();
+
+    Json.Write(new { success = true, data = info }, Output);
+
+}

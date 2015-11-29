@@ -90,7 +90,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="baiduMap.html" />
+    <Content Include="Content\Rar.exe" />
     <Content Include="controller.js" />
+    <Content Include="dest\components.js" />
+    <Content Include="dest\controller.js" />
+    <Content Include="dest\images\append.css" />
+    <Content Include="dest\images\close.png" />
+    <Content Include="dest\images\dataloading.png" />
+    <Content Include="dest\images\default.jpg" />
+    <Content Include="dest\images\guide_hd.png" />
+    <Content Include="dest\images\home_flag.png" />
+    <Content Include="dest\images\home_tip.png" />
+    <Content Include="dest\images\home_vip.png" />
+    <Content Include="dest\images\icon.png" />
+    <Content Include="dest\images\icon_share.png" />
+    <Content Include="dest\images\imgbg.png" />
+    <Content Include="dest\images\launch0.jpg" />
+    <Content Include="dest\images\launch1.jpg" />
+    <Content Include="dest\images\launch101.jpg" />
+    <Content Include="dest\images\launch101_480.jpg" />
+    <Content Include="dest\images\launch2.jpg" />
+    <Content Include="dest\images\reload.png" />
+    <Content Include="dest\images\site.png" />
+    <Content Include="dest\images\style.css" />
+    <Content Include="dest\index.html" />
+    <Content Include="dest\slan.m.js" />
     <Content Include="Global.asax" />
     <Content Include="images\btn_fold.png" />
     <Content Include="images\btn_nochild.png" />
@@ -111,6 +135,8 @@
     <Content Include="index.html" />
     <Content Include="settings\controller.js" />
     <Content Include="settings\data.js" />
+    <Content Include="settings\index.html" />
+    <Content Include="settings\settings\data.js" />
     <Content Include="slan.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -132,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\" />
     <Folder Include="upload\" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +193,8 @@
     <Content Include="Views\API\settings\get_update.cshtml" />
     <Content Include="Views\API\manage\set_update.cshtml" />
     <Content Include="Views\API\settings\resourceMapping.cshtml" />
+    <Content Include="Views\API\manage\set_resource_mapping.cshtml" />
+    <Content Include="Views\API\manage\upload_resource.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

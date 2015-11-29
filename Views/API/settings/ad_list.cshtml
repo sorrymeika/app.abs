@@ -3,7 +3,7 @@
     RequestUtil req = new RequestUtil();
 
     string name = req.String("name");
-
+    var isBase64 = req.String("type") == "base64";
     var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.Image>(name + "Image");
     var data = settingUtil.Get().OrderByDescending(a => a.Sort);
 
@@ -11,7 +11,7 @@
     {
         data.All(a =>
         {
-            a.Src = SL.Util.RequestFile.FullUrl(a.Src);
+            a.Src = isBase64 ? ImageUtil.ToBase64String(Server.MapPath("~/" + a.Src)) : SL.Util.RequestFile.FullUrl(a.Src);
             return true;
         });
     }

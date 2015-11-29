@@ -1,0 +1,19 @@
+﻿@using SL.Util
+@{
+    SL.Util.RequestUtil req = new SL.Util.RequestUtil();
+    var file = req.File("file", false, "请上传压缩包", "rar", "请上传rar压缩包", 20000000);
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+
+    file.SaveAs(Server.MapPath("~/Content/dest.rar"));
+
+    SL.Util.Rar.Decompress(Server.MapPath("~/Content/Rar.exe"), Server.MapPath("~/Content/dest.rar"), Server.MapPath("~/"), () =>
+    {
+    });
+
+    Json.Write(new { success = true }, Output);
+}

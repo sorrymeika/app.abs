@@ -6,23 +6,23 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\absapp</_PublishTargetUrl>
+    <_PublishTargetUrl>Z:\下载\Development\absapp</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Code/AuthHelper.cshtml">
-      <publishTime>09/20/2015 21:51:02</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="baiduMap.html">
-      <publishTime>10/27/2015 13:27:35</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>01/05/2011 15:45:38</publishTime>
     </File>
     <File Include="bin/SL.dll">
-      <publishTime>10/11/2015 23:15:07</publishTime>
+      <publishTime>11/28/2015 11:19:27</publishTime>
     </File>
     <File Include="bin/SL.Web.dll">
-      <publishTime>10/26/2015 11:05:39</publishTime>
+      <publishTime>11/28/2015 11:19:27</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/05/2011 15:45:38</publishTime>
@@ -276,71 +276,149 @@
     <File Include="components/umeditor/umeditor.js">
       <publishTime>07/17/2015 16:47:38</publishTime>
     </File>
+    <File Include="Content/Rar.exe">
+      <publishTime>05/20/2015 09:57:23</publishTime>
+    </File>
     <File Include="controller.js">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
+    </File>
+    <File Include="dest/components.js">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/controller.js">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/append.css">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/close.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/dataloading.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/default.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/guide_hd.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/home_flag.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/home_tip.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/home_vip.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/icon.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/icon_share.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/imgbg.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/launch0.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/launch1.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/launch101.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/launch101_480.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/launch2.jpg">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/reload.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/site.png">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/images/style.css">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/index.html">
+      <publishTime>11/28/2015 10:10:30</publishTime>
+    </File>
+    <File Include="dest/slan.m.js">
+      <publishTime>11/28/2015 10:10:30</publishTime>
     </File>
     <File Include="Global.asax">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="images/btn_fold.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/btn_nochild.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/btn_spread.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/datePicker.gif">
-      <publishTime>08/17/2015 03:01:25</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="images/grid_child_header.gif">
-      <publishTime>08/17/2015 03:01:25</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="images/grid_header.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/header.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/headerbg.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/icons.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/point.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/sort_asc.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/sort_asc_disabled.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/sort_both.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/sort_desc.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/sort_desc_disabled.png">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="images/style.css">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:21</publishTime>
     </File>
     <File Include="settings/controller.js">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/28/2015 11:20:22</publishTime>
     </File>
     <File Include="settings/data.js">
-      <publishTime>10/27/2015 13:27:08</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
+    </File>
+    <File Include="settings/index.html">
+      <publishTime>11/07/2015 23:14:40</publishTime>
+    </File>
+    <File Include="settings/settings/data.js">
+      <publishTime>11/28/2015 11:20:22</publishTime>
     </File>
     <File Include="slan.js">
-      <publishTime>10/27/2015 13:27:11</publishTime>
+      <publishTime>11/28/2015 11:20:22</publishTime>
     </File>
     <File Include="Views/API/activity/add_comment.cshtml">
       <publishTime>07/22/2015 16:32:39</publishTime>
@@ -385,7 +463,7 @@
       <publishTime>07/24/2015 09:17:22</publishTime>
     </File>
     <File Include="Views/API/manage/add_ad.cshtml">
-      <publishTime>08/17/2015 00:40:59</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/Manage/add_article.cshtml">
       <publishTime>07/24/2015 13:05:27</publishTime>
@@ -400,7 +478,7 @@
       <publishTime>07/22/2015 09:19:51</publishTime>
     </File>
     <File Include="Views/API/manage/delete_ad.cshtml">
-      <publishTime>08/17/2015 00:38:01</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/Manage/delete_destination.cshtml">
       <publishTime>07/20/2015 15:40:20</publishTime>
@@ -409,13 +487,13 @@
       <publishTime>07/24/2015 09:17:22</publishTime>
     </File>
     <File Include="Views/API/Manage/Login.cshtml">
-      <publishTime>08/14/2015 22:03:17</publishTime>
+      <publishTime>11/27/2015 17:33:36</publishTime>
     </File>
     <File Include="Views/API/Manage/modify_activity.cshtml">
       <publishTime>07/24/2015 09:17:22</publishTime>
     </File>
     <File Include="Views/API/manage/modify_ad.cshtml">
-      <publishTime>10/11/2015 23:19:46</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/Manage/modify_article.cshtml">
       <publishTime>07/24/2015 13:06:49</publishTime>
@@ -423,53 +501,62 @@
     <File Include="Views/API/Manage/modify_destination.cshtml">
       <publishTime>07/24/2015 09:17:22</publishTime>
     </File>
+    <File Include="Views/API/manage/set_resource_mapping.cshtml">
+      <publishTime>11/13/2015 02:08:21</publishTime>
+    </File>
     <File Include="Views/API/manage/set_update.cshtml">
-      <publishTime>10/26/2015 11:02:44</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/Manage/UMEditor.ImageUp.cshtml">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
+    </File>
+    <File Include="Views/API/manage/upload_resource.cshtml">
+      <publishTime>11/28/2015 11:19:14</publishTime>
     </File>
     <File Include="Views/API/Manage/user_list.cshtml">
       <publishTime>07/22/2015 10:05:02</publishTime>
     </File>
     <File Include="Views/API/order/list.cshtml">
-      <publishTime>10/26/2015 16:18:53</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/quan/list.cshtml">
       <publishTime>07/27/2015 09:21:37</publishTime>
     </File>
     <File Include="Views/API/settings/ad_list.cshtml">
-      <publishTime>10/16/2015 14:11:05</publishTime>
+      <publishTime>11/23/2015 14:20:49</publishTime>
     </File>
     <File Include="Views/API/settings/get_update.cshtml">
-      <publishTime>10/26/2015 10:50:58</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
+    </File>
+    <File Include="Views/API/settings/resourceMapping.cshtml">
+      <publishTime>11/13/2015 01:43:58</publishTime>
     </File>
     <File Include="Views/API/settings/update.cshtml">
-      <publishTime>10/26/2015 10:15:36</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/shop/shop_list.cshtml">
-      <publishTime>09/20/2015 21:24:56</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/get.cshtml">
-      <publishTime>10/10/2015 12:22:53</publishTime>
+      <publishTime>11/25/2015 11:34:54</publishTime>
     </File>
     <File Include="Views/API/user/get_city.cshtml">
-      <publishTime>08/16/2015 15:08:24</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/get_month_free.cshtml">
-      <publishTime>08/26/2015 22:03:04</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/get_msg.cshtml">
-      <publishTime>09/18/2015 20:22:13</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/get_points.cshtml">
-      <publishTime>08/23/2015 15:13:40</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/get_unread_msg_count.cshtml">
-      <publishTime>08/23/2015 14:01:49</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/login.cshtml">
-      <publishTime>09/18/2015 20:22:13</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/register.cshtml">
       <publishTime>07/24/2015 10:39:54</publishTime>
@@ -478,31 +565,31 @@
       <publishTime>07/27/2015 09:21:37</publishTime>
     </File>
     <File Include="Views/API/user/send_sms.cshtml">
-      <publishTime>08/26/2015 22:03:04</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/update.cshtml">
-      <publishTime>08/16/2015 16:21:50</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/API/user/update_pwd.cshtml">
       <publishTime>07/27/2015 09:21:37</publishTime>
     </File>
     <File Include="Views/API/user/voucher_list.cshtml">
-      <publishTime>10/10/2015 12:22:53</publishTime>
+      <publishTime>11/25/2015 11:37:57</publishTime>
     </File>
     <File Include="Views/API/_blank.cshtml">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/Core/Index.cshtml">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/Web.config">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
-      <publishTime>08/05/2015 20:45:30</publishTime>
+      <publishTime>11/07/2015 23:14:40</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/16/2015 14:34:24</publishTime>
+      <publishTime>11/14/2015 01:45:09</publishTime>
     </File>
   </ItemGroup>
 </Project>

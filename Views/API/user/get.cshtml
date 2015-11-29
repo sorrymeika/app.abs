@@ -76,15 +76,18 @@
                 data.FreeMonths = 0;
             }
 
-            data.FreeCouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=0 and @p1<CSV_END_DT and VCA_VCT_ID=4", userId, DateTime.Now);
+            data.FreeCouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=0 and @p1 between CSV_START_DT and CSV_END_DT and VCA_VCT_ID=4", userId, DateTime.Now);
 
-            data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=0 and @p1<CSV_END_DT and VCA_VCT_ID!=4", userId, DateTime.Now);
+            data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=0 and @p1 between CSV_START_DT and CSV_END_DT and VCA_VCT_ID!=4", userId, DateTime.Now);
 
             data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase left join BChannel on PUR_CNL_ID=CNL_ID where PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5", userId);
 
             var userData = db.QuerySingle("select USL_LOGINNAME,USL_PASSWORD from WUserLogin where USL_PSP_ID=@p0", userId);
 
-            data.OpenUrl = "http://m.abs.cn?src=8003&u=" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
+            var token = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("m=" + userData.USL_LOGINNAME + "&p=" + Md5.MD5(userData.USL_LOGINNAME + userData.USL_PASSWORD)));
+
+            data.OpenUrl = "http://m.abs.cn?src=8003&u=" + token;
+            data.token = new { src= 8003, u= token };
 
             Json.Write(new { success = true, data = data, vdpMessage = vdpMessage }, Output);
         }

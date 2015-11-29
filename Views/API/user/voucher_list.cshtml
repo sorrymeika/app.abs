@@ -30,7 +30,7 @@
 
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.Query("select VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where " + where, parameters.ToArray());
+            var data = db.Query("select top 20 VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where " + where + " order by CSV_END_DT desc", parameters.ToArray());
 
             var closeNumber = 0;
             if (data != null)

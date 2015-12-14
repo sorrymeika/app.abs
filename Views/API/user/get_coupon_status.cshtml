@@ -1,0 +1,57 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int couponId = req.Int("id", false, "参数错误:id");
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        //使用状态（0.未领用且未使用；1.已领用未使用；2.已使用）
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.QuerySingle("select CSV_ID,CSV_USE_FLAG,CSV_CODE,CSV_START_DT,CSV_END_DT from BCashVoucher where CSV_ID=@p0", couponId);
+            bool overdue = DateTime.Now > data.CSV_END_DT;
+            if (overdue)
+            {
+                Json.Write(new { success = false, msg = "该券已过期" }, Output);
+                return;
+            }
+
+            var shareInfo = db.QuerySingle("select VSR_ID,VSR_START_SHARE_TIME,VSR_END_SHARE_TIME,VSR_VST_ID from BVoucherSharing where VSR_CSV_ID=@p1");
+            int vsrId;
+            int qty = 1;
+            int type = 1;
+
+            if (shareInfo == null)
+            {
+                db.Execute("insert into BVoucherSharing (VSR_CSV_ID,VSR_START_SHARE_TIME,VSR_END_SHARE_TIME,VSR_VST_ID,VSR_SHARE_QTY,VSR_CREATION_DT) values (@p0,@p1,@p2,@p3,@p4,@p5)", out vsrId, couponId, DateTime.Now, DateTime.Now.AddDays(30), type, qty, DateTime.Now);
+
+                int csvid;
+                db.Execute("insert into BCashVoucher (CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_VDP_ID) values (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7)", out csvid, data.CSV_CODE + 1, data.CSV_VCA_ID, 0, data.CSV_START_DT, data.CSV_END_DT, data.CSV_CREATION_DT, data.CSV_UPDATE_DT, data.CSV_VDP_ID);
+
+                db.Execute("insert into LVsrCsv (LRV_VSR_ID,LRV_CSV_ID) values (@p0,@p1)", vsrId, csvid);
+            }
+            else
+            {
+                vsrId = shareInfo.vsrId;
+            }
+
+
+            string url = RequestFile.FullUrl("dest/index.html#/couponshare?code=" + Base64Util.Encode(Json.Encode(new { uid = userId, id = vsrId, sign = Md5.MD5(auth) })));
+
+            Json.Write(new { success = true, status = data.CSV_USE_FLAG, overdue = overdue, url = url }, Output);
+        }
+
+    }
+}

@@ -1,0 +1,9 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int purId = req.Int("id", false, "参数错误:id");
+    int status = SL.Data.SQL.QueryValue<int>("select PUR_PAS_ID from BPurchase where PUR_ID=@p0", purId);
+
+    Json.Write(new { success = true, status = status }, Output);
+}

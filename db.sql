@@ -1,13 +1,19 @@
 select * from BMessage order by MSG_ID desc
 
+
+select CSV_USE_FLAG from 
+
+
 select * from WFree join LFreCnl on LFC_FRE_ID=FRE_ID
 select * from LPspFre
 
-update BPurchase set PUR_PSP_ID=87
-update XProspect set XPS_EFFICTIVE_AMOUNT=1000,XPS_END_FREE_DT='2016-10-09',XPS_START_FREE_DT='2015-05-09' where XPS_PSP_ID=59
+update BPurchase set PUR_PSP_ID=86
+update XProspect set XPS_EFFICTIVE_AMOUNT=1000,XPS_END_FREE_DT='2016-10-09',XPS_START_FREE_DT='2015-05-09' where XPS_PSP_ID=86
+
+update XProspect set XPS_AVAILABLEPOINTS=1000 where XPS_PSP_ID=86
 
 select * from BCashVoucher
-update BCashVoucher set CSV_PSP_ID=87
+update BCashVoucher set CSV_PSP_ID=86
 
 
 select XPS_START_FREE_DT,XPS_END_FREE_DT from XProspect where XPS_PSP_ID=59
@@ -111,4 +117,5 @@ alter table HPoint add HPT_CNL_ID int
 
 alter table LFreCnl add FRE_MOBILE_PIC1 varchar(255)
 alter table LFreCnl add FRE_MOBILE_PIC2 varchar(255)
+
 

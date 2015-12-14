@@ -1,0 +1,24 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string order_no = req.String("order_no");
+
+    //plat = ios & order_no =%@&product_name =%@&order_price =%@
+
+    var data = SL.Data.SQL.QuerySingle("select PUR_ID,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,PUR_PAY_ID,PUR_PUS_ID from BPurchase where PUR_CODE=@p0", order_no);
+
+    if (data != null)
+    {
+        int fee = Convert.ToInt32((data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT) * 100);
+        int purId = data.PUR_ID;
+
+        var result = PayUtil.GetWxQRPayUrl("" + purId, order_no, fee, "ABS商品", "ABS", "ABS" + purId);
+
+        Json.Write(new { success = true, url = result }, Output);
+    }
+    else
+    {
+        Output.Write(order_no);
+    }
+}

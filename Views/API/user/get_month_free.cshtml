@@ -25,59 +25,74 @@
 
             if (data.XPS_END_FREE_DT != null && data.XPS_START_FREE_DT != null)
             {
+                var count = 3;
                 DateTime date;
-                for (var i = data.XPS_START_FREE_DT; i < data.XPS_END_FREE_DT;)
+                List<DateTime> dateList = new List<DateTime>();
+
+                for (date = DateTime.Today > data.XPS_START_FREE_DT ? DateTime.Today : data.XPS_START_FREE_DT; count > 0 && DateUtil.MonthDiff(date, data.XPS_END_FREE_DT) >= 0; date = date.AddMonths(1))
                 {
-                    date = i.AddMonths(1);
+                    dateList.Add(date);
+                    count--;
+                }
 
-                    var monthDiff = DateUtil.MonthDiff(i, DateTime.Today);
-
-                    if (monthDiff <= 3 && monthDiff >= -8)
+                if (count > 0)
+                {
+                    for (date = DateTime.Today.AddMonths(-1); count > 0 && DateUtil.MonthDiff(data.XPS_START_FREE_DT, date) >= 0; date = date.AddMonths(-1))
                     {
-                        var item = new Dictionary<string, object>();
+                        dateList.Add(date);
+                        count--;
+                    }
+                }
+                dateList.Sort();
 
-                        var free = db.QuerySingle("select Top 1 FRE_ID,FRE_NAME,FRE_MOBILE_PIC1,FRE_MOBILE_PIC2,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=3 and @p1>=LFC_START_TIME and @p1<LFC_END_TIME", userId, i);
+                for (var i = 0; i < dateList.Count; i++)
+                {
+                    date = dateList[i];
 
-                        if (free != null)
-                        {
-                            item.Add("FRE_ID", free.FRE_ID);
-                            item.Add("FRE_NAME", free.FRE_NAME);
-                            item.Add("FRE_TITLE_PIC", free.FRE_MOBILE_PIC1 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC1 : null);
-                            item.Add("FRE_PIC1", free.FRE_MOBILE_PIC2 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC2 : null);
-                            item.Add("LPF_PUR_ID", free.LPF_PUR_ID);
-                        }
-                        else
-                        {
-                            item.Add("FRE_TITLE_PIC", null);
-                            item.Add("FRE_PIC1", null);
-                        }
+                    var item = new Dictionary<string, object>();
 
-                        if (result.FirstOrDefault(a => a.ContainsKey("Year") && (int)a["Year"] == i.Year) == null)
-                        {
-                            item.Add("Year", i.Year);
-                        }
-                        item.Add("Month", i.Month);
+                    var free = db.QuerySingle("select Top 1 FRE_ID,FRE_NAME,FRE_APP_PIC1 as FRE_MOBILE_PIC1,FRE_MOBILE_PIC2,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=3 and @p1>=LFC_START_TIME and @p1<LFC_END_TIME", userId, date);
 
-                        item.Add("CanGet", monthDiff == 0 && free != null && free.LPF_PUR_ID == null);
+                    if (free != null)
+                    {
+                        item.Add("FRE_ID", free.FRE_ID);
+                        item.Add("FRE_NAME", free.FRE_NAME);
+                        item.Add("FRE_TITLE_PIC", free.FRE_MOBILE_PIC1 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC1 : null);
+                        item.Add("FRE_PIC1", free.FRE_MOBILE_PIC2 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC2 : null);
+                        item.Add("LPF_PUR_ID", free.LPF_PUR_ID);
+                    }
+                    else
+                    {
+                        item.Add("FRE_TITLE_PIC", null);
+                        item.Add("FRE_PIC1", null);
+                    }
 
-                        if (monthDiff > 0)
-                        {
-                            item.Add("Overdue", true);
-                        }
-                        else if (monthDiff == 0)
+                    item.Add("Year", date.Year);
+                    item.Add("Month", date.Month);
+                    item.Add("Date", date.ToShortDateString());
+
+                    var monthDiff = DateUtil.MonthDiff(date, DateTime.Today);
+                    item.Add("MonthDiff", monthDiff);
+
+                    item.Add("CanGet", monthDiff == 0 && free != null && free.LPF_PUR_ID == null);
+
+                    if (monthDiff > 0)
+                    {
+                        item.Add("Overdue", true);
+                    }
+                    else
+                    {
+                        item.Add("Overdue", false);
+                        if (monthDiff == 0)
                         {
                             currentMonth = item;
                         }
-                        result.Add(item);
                     }
-                    i = date;
+                    result.Add(item);
                 }
             }
-            else
-            {
-            }
 
-            Json.Write(new { success = true, auth = newAuth, data = result, currentMonth = currentMonth }, Output);
+            Json.Write(new { success = true, auth = newAuth, data = result, currentMonth = currentMonth, year = DateTime.Today.Year }, Output);
         }
     }
 }

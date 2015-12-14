@@ -17,7 +17,7 @@
     }
     else
     {
-        string where = "CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1";
+        string where = "CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG in (0,1)";
         List<object> parameters = new List<object>() { userId };
 
         if (!string.IsNullOrEmpty(status))

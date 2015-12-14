@@ -70,8 +70,11 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AlipayDirectController.cs" />
+    <Compile Include="Controllers\AlipayWAPController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -92,29 +95,6 @@
     <Content Include="baiduMap.html" />
     <Content Include="Content\Rar.exe" />
     <Content Include="controller.js" />
-    <Content Include="dest\components.js" />
-    <Content Include="dest\controller.js" />
-    <Content Include="dest\images\append.css" />
-    <Content Include="dest\images\close.png" />
-    <Content Include="dest\images\dataloading.png" />
-    <Content Include="dest\images\default.jpg" />
-    <Content Include="dest\images\guide_hd.png" />
-    <Content Include="dest\images\home_flag.png" />
-    <Content Include="dest\images\home_tip.png" />
-    <Content Include="dest\images\home_vip.png" />
-    <Content Include="dest\images\icon.png" />
-    <Content Include="dest\images\icon_share.png" />
-    <Content Include="dest\images\imgbg.png" />
-    <Content Include="dest\images\launch0.jpg" />
-    <Content Include="dest\images\launch1.jpg" />
-    <Content Include="dest\images\launch101.jpg" />
-    <Content Include="dest\images\launch101_480.jpg" />
-    <Content Include="dest\images\launch2.jpg" />
-    <Content Include="dest\images\reload.png" />
-    <Content Include="dest\images\site.png" />
-    <Content Include="dest\images\style.css" />
-    <Content Include="dest\index.html" />
-    <Content Include="dest\slan.m.js" />
     <Content Include="Global.asax" />
     <Content Include="images\btn_fold.png" />
     <Content Include="images\btn_nochild.png" />
@@ -161,6 +141,10 @@
     <Folder Include="upload\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Alipay\Alipay.csproj">
+      <Project>{549eb3bc-dae5-4ad9-b717-d4afb0911734}</Project>
+      <Name>Alipay</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SL\SL.csproj">
       <Project>{D8E09BBC-5A9D-441B-B403-988286537F2B}</Project>
       <Name>SL</Name>
@@ -195,6 +179,11 @@
     <Content Include="Views\API\settings\resourceMapping.cshtml" />
     <Content Include="Views\API\manage\set_resource_mapping.cshtml" />
     <Content Include="Views\API\manage\upload_resource.cshtml" />
+    <Content Include="Views\API\shop\wxnotify.cshtml" />
+    <Content Include="Views\API\shop\wxcreateorder.cshtml" />
+    <Content Include="Views\API\user\get_order_status.cshtml" />
+    <Content Include="Views\API\user\get_coupon_status.cshtml" />
+    <Content Include="Views\API\shop\wxpayqrcode.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

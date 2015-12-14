@@ -1,0 +1,36 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string order_no = req.String("order_no");
+
+    //plat = ios & order_no =%@&product_name =%@&order_price =%@
+
+    var data = SL.Data.SQL.QuerySingle("select PUR_ID,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,PUR_PAY_ID,PUR_PUS_ID from BPurchase where PUR_CODE=@p0", order_no);
+
+    if (data != null)
+    {
+        int fee = Convert.ToInt32((data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT) * 100);
+        int purId = data.PUR_ID;
+
+        var result = PayUtil.WxAppPay(order_no, fee, Request.UserHostAddress, "ABS商品", "ABS", "ABS" + purId);
+
+        var json = Json.Decode<SortedDictionary<string, object>>(result.ToJson());
+        var success = json["return_code"].ToString() == "SUCCESS" ? 0 : 1;
+        json["retcode"] = success;
+        json["retmsg"] = json["return_msg"];
+        if (success == 0)
+        {
+            json["partnerid"] = json["mch_id"];
+            json["prepayid"] = json["prepay_id"];
+            json["noncestr"] = json["nonce_str"];
+            json["package"] = "Sign=WXPay";
+        }
+
+        Json.Write(json, Output);
+    }
+    else
+    {
+        Output.Write(order_no);
+    }
+}

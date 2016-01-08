@@ -21,7 +21,7 @@
     else
     {
         int total;
-        string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID!=7 and CNL_CLT_ID!=8";
+        string where = "PUR_PSP_ID=@p0 and CNL_CLT_ID in (1,2,3,4,5,6)";
         List<object> parameters = new List<object>() { userId };
 
         if (status == 0 && payStatus == 3)
@@ -82,7 +82,7 @@
                         item.PUS_DESC = "已完成";
                     }
 
-                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_DISCONTINUED_FLAG,MSP_DISCONTINUED_FLAG,WPP_PRD_ID,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join BProdHeader on PRH_ID=PRD_PRH_ID left join WProductPicture on WPP_PRD_ID=PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRH_PRT_ID=1 and LPK_PUR_ID=@p0 and PRD_ID!=100000", item.PUR_ID);
+                    IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_DISCONTINUED_FLAG,MSP_DISCONTINUED_FLAG,WPP_PRD_ID,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE,LPK_CHANNEL_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join BProdHeader on PRH_ID=PRD_PRH_ID left join WProductPicture on WPP_PRD_ID=PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRH_PRT_ID=1 and LPK_PUR_ID=@p0 and PRD_ID!=100000", item.PUR_ID);
 
                     item.Children = children;
 

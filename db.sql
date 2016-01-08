@@ -1,8 +1,28 @@
 select * from BMessage order by MSG_ID desc
 
+select top 20 VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID left join (select min(LVP_PRD_ID) as LVP_PRD_ID,LVP_VCA_ID from LVcaPrd group by LVP_VCA_ID) a on LVP_VCA_ID=VCA_ID
 
-select CSV_USE_FLAG from 
+select * from HMemberLogin
 
+alter table HMemberLogin drop column HML_DEVICE登录设备
+
+alter table HMemberLogin add HML_DEVICE varchar(100)
+
+select * from BProspect
+
+select * from BOrderAddress
+
+select * from RCity
+
+select *,PUR_ORA_ID from BPurchase
+
+ALTER table BVoucherDispatcher add VDP_USER_MSG nvarchar(1000) null
+
+select * from BVoucherSharing
+INSERT into RVoucherShareType SELECT 1,'单个分','',9;
+INSERT into RVoucherShareType SELECT 2,'平均分','',8;
+INSERT into RVoucherShareType SELECT 3,'随机分','',7;
+SELECT * from RVoucherShareType;
 
 select * from WFree join LFreCnl on LFC_FRE_ID=FRE_ID
 select * from LPspFre
@@ -117,5 +137,3 @@ alter table HPoint add HPT_CNL_ID int
 
 alter table LFreCnl add FRE_MOBILE_PIC1 varchar(255)
 alter table LFreCnl add FRE_MOBILE_PIC2 varchar(255)
-
-

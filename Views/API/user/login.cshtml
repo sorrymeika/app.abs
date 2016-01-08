@@ -3,6 +3,10 @@
     RequestUtil req = new RequestUtil();
     String mobile = req.String("mobile", false, "mobile必传");
     string smsCode = req.String("smsCode", false, "smsCode必传");
+    string invitedCode = req.String("invitedCode");
+    string platform = req.String("platform");
+    string deviceVersion = req.String("deviceVersion");
+    string version = req.String("version");
 
     if (req.HasError)
     {
@@ -32,8 +36,8 @@
                 password = Md5.MD5(RandomUtil.Create(8));
                 if (prospect == null)
                 {
-                    db.Execute("insert into BProspect (PSP_CODE,PSP_NAME,PSP_REGISTRATION_DT,PSP_DELETED_FLAG,PSP_CTT_ID,PSP_CREATIONUID,PSP_CREATION_DT) values (@p0,@p0,@p1,0,1,@p0,@p1)", out id, mobile, DateTime.Now);
-                    db.Execute("insert into XProspect (XPS_PSP_ID,XPS_TOTALPOINTS,XPS_REDEEMPOINTS,XPS_AVAILABLEPOINTS,XPS_TOTAL_AMOUNT,XPS_REFUND_AMOUNT,XPS_EFFICTIVE_AMOUNT,XPS_PUR_TIMES,XPS_TOTAL_PUR_QTY,XPS_TOTAL_REFUND_QTY,XPS_TOTAL_EFFICTIVE_QTY) values (@p0,0,0,0,0,0,0,0,0,0,0)", id);
+                    db.Execute("insert into BProspect (PSP_CODE,PSP_NAME,PSP_CNL_ID,PSP_REGISTRATION_DT,PSP_DELETED_FLAG,PSP_CTT_ID,PSP_CREATIONUID,PSP_CREATION_DT) values (@p0,@p0,3,@p1,0,1,@p0,@p1)", out id, mobile, DateTime.Now);
+                    db.Execute("insert into XProspect (XPS_PSP_ID,XPS_TOTALPOINTS,XPS_REDEEMPOINTS,XPS_AVAILABLEPOINTS,XPS_TOTAL_AMOUNT,XPS_REFUND_AMOUNT,XPS_EFFICTIVE_AMOUNT,XPS_PUR_TIMES,XPS_TOTAL_PUR_QTY,XPS_TOTAL_REFUND_QTY,XPS_TOTAL_EFFICTIVE_QTY,XPS_CTG_ID) values (@p0,0,0,0,0,0,0,0,0,0,0,0)", id);
                 }
                 else
                 {
@@ -57,9 +61,61 @@
 
             SL.Util.CacheUtil.CreateCache("U" + id, auth);
 
+            int ivcId = 0;
+            string invitedMsg = "";
+            if (!string.IsNullOrEmpty(invitedCode))
+            {
+                var userIvc = db.QuerySingle("select XPS_IVC_ID,XPS_ROOT_IVC_ID from XProspect where XPS_PSP_ID=@p0", id);
+
+                if (userIvc != null && (userIvc.XPS_IVC_ID != null && userIvc.XPS_IVC_ID != 0) && userIvc.XPS_ROOT_IVC_ID != null && userIvc.XPS_ROOT_IVC_ID != 0)
+                {
+                    //ivcId = userIvc.XPS_IVC_ID;
+                    invitedMsg = "HAS_BIND";
+                }
+                else
+                {
+                    ivcId = db.QueryValue<int>("select IVC_ID from BInvitationCode where IVC_CODE=@p0", invitedCode);
+
+                    if (ivcId != 0)
+                    {
+                        if (userIvc.XPS_ROOT_IVC_ID == null || userIvc.XPS_ROOT_IVC_ID == 0)
+                        {
+                            userIvc.XPS_ROOT_IVC_ID = ivcId;
+                        }
+
+                        db.Execute("update XProspect set XPS_ROOT_IVC_ID=@p2,XPS_IVC_ID=@p1 where XPS_PSP_ID=@p0", id, ivcId, userIvc.XPS_ROOT_IVC_ID);
+
+                        var livData = db.QuerySingle("select LIV_VCA_ID,LIV_QTY,LIV_START_TIME,LIV_END_TIME from  LIvcVca where LIV_IVC_ID=@p0 and GetDate() between LIV_START_TIME and LIV_END_TIME and LIV_DELETED_FLAG=0", ivcId);
+
+                        if (livData != null && (userIvc.XPS_IVC_ID == null || userIvc.XPS_IVC_ID == 0))
+                        {
+                            invitedMsg = "插入优惠券:";
+                            for (var i = 0; i < livData.LIV_QTY; i++)
+                            {
+                                db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT,CSV_PSP_ID,CSV_USE_FLAG) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4,@p5,1)", livData.LIV_VCA_ID, 0, RandomUtil.Create(7) + i, DateTime.Now, DateTime.Today.AddDays(30), id);
+                                invitedMsg += i + "|";
+                            }
+                        }
+                        else
+                        {
+                            invitedMsg = "找不到邀请码:" + ivcId;
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                db.Execute("insert into HMemberLogin (HML_PSP_ID,HML_CNL_ID,HML_DT,HML_DEVICE,HML_DEVICE_VERSION,HML_IVC_ID,HML_APP_VERSION) values (@p0,3,GetDate(),@p1,@p2,@p3,@p4)", id, platform, deviceVersion, ivcId, version);
+            }
+            catch
+            {
+            }
+
             Json.Write(new
             {
                 success = true,
+                msg = invitedMsg,
                 data = new
                 {
                     ID = id,

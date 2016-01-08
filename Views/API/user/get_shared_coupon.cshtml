@@ -1,0 +1,50 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    var str = req.String("data", false, "参数错误:data");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录", error_code = 503 }, Output);
+    }
+    else
+    {
+        var code = Json.Decode<Dictionary<string, object>>(Base64Util.Decode(str));
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var id = (int)code["id"];
+            var data = db.Query("select CSV_ID,CSV_PSP_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BVoucherSharing join LVsrCsv on LRV_VSR_ID=VSR_ID join BCashVoucher on LRV_CSV_ID=CSV_ID where VSR_ID=@p0", id);
+
+            if (data == null)
+            {
+                Json.Write(new { success = false, msg = "券已领完，下次早些来哦" }, Output);
+                return;
+            }
+
+            if (data.FirstOrDefault(a => a.CSV_PSP_ID == userId) != null)
+            {
+                Json.Write(new { success = false, msg = "您已领过该券" }, Output);
+                return;
+            }
+
+            var coupon = data.FirstOrDefault(a => a.CSV_USE_FLAG == 0 && DateTime.Now < a.CSV_END_DT);
+            if (coupon == null)
+            {
+                Json.Write(new { success = false, msg = "券已领完，下次早些来哦" }, Output);
+                return;
+            }
+
+            db.Execute("update BCashVoucher set CSV_PSP_ID=@p0,CSV_USE_FLAG=1 where CSV_ID=@p0", coupon.CSV_ID);
+
+            Json.Write(new { success = true, data = coupon }, Output);
+        }
+    }
+}

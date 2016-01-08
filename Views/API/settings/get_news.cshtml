@@ -1,0 +1,11 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string name = req.String("name");
+    var id = req.Int("id");
+    var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.HtmlBlock>(name + "News");
+    var data = settingUtil.FirstOrDefault(a => a.ID == id);
+
+    Json.Write(new { success = true, data = data }, Output);
+}

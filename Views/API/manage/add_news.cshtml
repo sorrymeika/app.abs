@@ -1,0 +1,24 @@
+﻿@using SL.Util
+@{
+    SL.Util.RequestUtil req = new SL.Util.RequestUtil();
+    string name = req.String("name");
+    string title = req.String("title");
+    string content = req.String("content");
+    int sort = req.Int("sort");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+
+    var settingUtil = new SL.Util.SettingUtil<SL.Web.Model.HtmlBlock>(name + "News");
+    settingUtil.Add(new SL.Web.Model.HtmlBlock
+    {
+        Title = title,
+        Sort = sort,
+        Content = content
+    }, "ID");
+
+    SL.Util.HtmlUtil.Output(new { success = true });
+}

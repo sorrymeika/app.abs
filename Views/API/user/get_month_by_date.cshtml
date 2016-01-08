@@ -4,6 +4,8 @@
 
     int userId = req.Int("userId", false, "参数错误:userId");
     string auth = req.String("auth", false, "参数错误:auth");
+    //开始查询的月份，不包含该月
+    string startMonth = req.String("startMonth", false, "参数错误:startMonth");
     string newAuth;
 
     if (req.HasError)
@@ -30,20 +32,14 @@
                 DateTime date;
                 List<DateTime> dateList = new List<DateTime>();
 
-                for (date = DateTime.Today > data.XPS_START_FREE_DT ? DateTime.Today : data.XPS_START_FREE_DT; count > 0 && DateUtil.MonthDiff(date, data.XPS_END_FREE_DT) >= 0; date = date.AddMonths(1))
+                DateTime fromDate = DateTime.Parse(startMonth).AddMonths(-1);
+
+                for (date = fromDate; count > 0 && DateUtil.MonthDiff(data.XPS_START_FREE_DT, date) >= 0; date = date.AddMonths(-1))
                 {
                     dateList.Add(date);
                     count--;
                 }
 
-                if (count > 0)
-                {
-                    for (date = DateTime.Today.AddMonths(-1); count > 0 && DateUtil.MonthDiff(data.XPS_START_FREE_DT, date) >= 0; date = date.AddMonths(-1))
-                    {
-                        dateList.Add(date);
-                        count--;
-                    }
-                }
                 dateList.Sort();
 
                 var firstDate = dateList.FirstOrDefault();
@@ -98,7 +94,7 @@
                 }
             }
 
-            Json.Write(new { success = true, auth = newAuth, data = result, currentMonth = currentMonth, year = DateTime.Today.Year, minDate = minDate }, Output);
+            Json.Write(new { success = true, data = result, currentMonth = currentMonth, year = DateTime.Today.Year, minDate = minDate }, Output);
         }
     }
 }

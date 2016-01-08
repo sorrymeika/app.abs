@@ -139,6 +139,8 @@ namespace SL.Web.Controllers
                     //判断是否在商户网站中已经做过了这次通知返回的处理
                     //如果没有做过处理，那么执行商户的业务程序
                     //如果有做过处理，那么不执行商户的业务程序
+                    SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+
 
                     //打印页面
                     return Content("验证成功<br />");
@@ -201,6 +203,8 @@ namespace SL.Web.Controllers
                             //该种交易状态只在两种情况下出现
                             //1、开通了普通即时到账，买家付款成功后。
                             //2、开通了高级即时到账，从该笔交易成功时间算起，过了签约时的可退款时限（如：三个月以内可退款、一年以内可退款等）后。
+                            SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+
 
                             return Content("success");  //请不要修改或删除
                         }
@@ -212,6 +216,8 @@ namespace SL.Web.Controllers
 
                             //注意：
                             //该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
+                            SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+
 
 
                             return Content("success");  //请不要修改或删除

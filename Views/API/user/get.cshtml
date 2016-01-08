@@ -36,31 +36,46 @@
             {
                 if (IMEI != data.XPS_MOBILE_IMEI)
                 {
-                    if (string.IsNullOrEmpty(data.XPS_MOBILE_IMEI))
-                    {
-                        var vdpList = db.Query("select VDP_ID,VDP_DESC,VDP_MESSAGE,VDP_VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join BVoucherActivity on VDP_VCA_ID=VCA_ID where VDP_ID in (1,2) and VDP_VALID_FLAG=1");
-
-                        if (vdpList != null && vdpList.Count != 0)
-                        {
-                            vdpMessage = vdpList[0].VDP_MESSAGE;
-
-                            using (SL.Data.Database dba = SL.Data.Database.Open("MS_ABS"))
-                            {
-                                foreach (var vdp in vdpList)
-                                {
-                                    db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT,CSV_PSP_ID) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4,@p5)", vdp.VDP_VCA_ID, vdp.VDP_ID, RandomUtil.Create(8), vdp.VCA_START_DT, vdp.VCA_END_DT, userId);
-
-                                    int msgId;
-                                    dba.Execute("insert into BMessage (MSG_RMT_ID,MSG_ALL_FLAG,MSG_DESC,MSG_TITLE,MSG_CONTENT,MSG_START_DT,MSG_END_DT,MSG_DT) values (5,0,@p0,@p0,@p1,@p2,@p3,GetDate())", out msgId, vdp.VDP_DESC, vdp.VDP_MESSAGE, DateTime.Now, DateTime.Now.AddMonths(60));
-
-                                    dba.Execute("insert into LPspMsg (LPM_TITLE,LPM_MSG_ID,LPM_PSP_ID,LPM_MDT_ID,LPM_STATUS,LPM_START_DT,LPM_END_DT,LPM_CREATION_DT) values ('',@p0,@p1,4,0,@p2,@p3,GetDate())", msgId, userId, DateTime.Now, DateTime.Now.AddMonths(60));
-                                }
-                            }
-                        }
-                    }
-
                     db.Execute("update XProspect set XPS_MOBILE_IMEI=@p0 where XPS_PSP_ID=@p1", IMEI, userId);
                     data.XPS_MOBILE_IMEI = IMEI;
+                }
+            }
+
+            var vdpList = db.Query("select VDP_ID,VDP_DESC,VDP_MESSAGE,VCA_ID,VCA_START_DT,VCA_END_DT from BVoucherDispatcher join LVdpVca on LAP_VDP_ID=VDP_ID join BVoucherActivity on LAP_VCA_ID=VCA_ID where VDP_ID=1 and VDP_VALID_FLAG=1");
+
+            if (vdpList != null && vdpList.Count != 0)
+            {
+
+                bool hasMsg = false;
+                foreach (var vdp in vdpList)
+                {
+                    if (!db.Exists("select 1 from BCashVoucher where CSV_VDP_ID=@p0 and CSV_VCA_ID=@p1 and CSV_PSP_ID=@p2", vdp.VDP_ID, vdp.VCA_ID, userId))
+                    {
+                        vdpMessage = vdpList[0].VDP_MESSAGE;
+                        hasMsg = true;
+
+                        db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT,CSV_PSP_ID,CSV_USE_FLAG) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4,@p5,1)", vdp.VCA_ID, vdp.VDP_ID, RandomUtil.Create(8), vdp.VCA_START_DT, vdp.VCA_END_DT, userId);
+                    }
+                }
+
+                if (hasMsg)
+                {
+                    using (SL.Data.Database dba = SL.Data.Database.Open("MS_ABS"))
+                    {
+                        var messages = dba.Query("select MSG_ID from BMESSAGE where MSG_VDP_ID=1");
+
+                        if (messages != null)
+                        {
+                            messages.All(msg =>
+                            {
+                                dba.Execute("insert into LPspMsg (LPM_TITLE,LPM_MSG_ID,LPM_PSP_ID,LPM_MDT_ID,LPM_STATUS,LPM_START_DT,LPM_END_DT,LPM_CREATION_DT) values ('',@p0,@p1,4,0,@p2,@p3,GetDate())", msg.MSG_ID, userId, DateTime.Now, DateTime.Now.AddMonths(60));
+
+                                return true;
+                            });
+
+                        }
+
+                    }
                 }
             }
 
@@ -76,9 +91,11 @@
                 data.FreeMonths = 0;
             }
 
-            data.FreeCouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG in (0,1) and @p1 between CSV_START_DT and CSV_END_DT and VCA_VCT_ID=4", userId, DateTime.Now);
+            data.PSP_CODE = Base64Util.Encode("pspcode=" + data.Mobile + "&code=" + Md5.MD5(data.Mobile + "abs.cn" + (data.Mobile == "18721979478" ? "605283" : ("" + userId))));
 
-            data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG=0 and @p1 between CSV_START_DT and CSV_END_DT and VCA_VCT_ID!=4", userId, DateTime.Now);
+            data.FreeCouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG in (0,1) and @p1<=CSV_END_DT and VCA_VCT_ID=4", userId, DateTime.Now);
+
+            data.CouponsCount = db.QueryValue<int>("select count(1) from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_PSP_ID=@p0 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG in (0,1) and @p1<=CSV_END_DT and VCA_VCT_ID!=4", userId, DateTime.Now);
 
             data.OrderCount = db.QueryValue<int>("select count(1) from BPurchase left join BChannel on PUR_CNL_ID=CNL_ID where PUR_PSP_ID=@p0 and CNL_CLT_ID!=6 and CNL_CLT_ID!=5", userId);
 
@@ -89,19 +106,7 @@
             data.OpenUrl = "http://m.abs.cn?src=8003&u=" + token;
             data.token = new { src = 8003, u = token };
 
-            data.StewardNum = db.QueryValue<int>(@"SELECT ISNULL(SUM(1),0) FROM (
-select count(1) AS a1 from bpurchase
-                left join LPrdPur on PUR_ID = LPK_PUR_ID
-                left JOIN BProduct on LPK_PRD_ID = PRD_ID
-                left JOIN BProdHeader on PRH_ID = PRD_PRH_ID
-                left JOIN WProductPicture on PRD_ID = WPP_PRD_ID
-                left join RProductCategory on PRH_PCT_ID = PCG_ID
-                where
-                PUR_PSP_ID = @p0 and
-                LEN(PRD_CODE) > 3
-                and PUR_PUS_ID in (8, 20)
-                GROUP by PRD_PRH_ID
-)AS TP", userId);
+            data.StewardNum = db.QueryValue<int>(@"SELECT ISNULL(SUM(1),0)as qty FROM ( SELECT   min(LPK_PRD_ID)as LPK_PRD_ID  From (select  min(LPK_PRD_ID)as LPK_PRD_ID, PRD_PRH_ID from  bpurchase left join LPrdPur on PUR_ID = LPK_PUR_ID left join BChannel on PUR_CNL_ID=CNL_ID left join RChannelType on CNL_CLT_ID=CLT_ID left JOIN BProduct on LPK_PRD_ID = PRD_ID left JOIN BProdHeader on PRH_ID=PRD_PRH_ID left JOIN WProductPicture on PRD_ID = WPP_PRD_ID left join RProductCategory on PRH_PCT_ID =PCG_ID where PUR_PSP_ID=@p0 and  CLT_ID in(1,2,3,4,5,6) and LEN(PRD_CODE)>3 and PUR_PUS_ID in (8,20)GROUP BY PRD_PRH_ID)as pur INNER join (SELECT BLD_PRH_ID FROM  BButlerServiceDetails group by BLD_PRH_ID )AS tc on pur.PRD_PRH_ID =tc.BLD_PRH_ID group by PRD_PRH_ID )as tp ", userId);
 
             Json.Write(new { success = true, data = data, vdpMessage = vdpMessage }, Output);
         }

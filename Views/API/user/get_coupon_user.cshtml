@@ -2,7 +2,7 @@
 @{
     RequestUtil req = new RequestUtil();
 
-    var code = req.Dictionary("data", false, "参数错误:data");
+    var str = req.String("data", false, "参数错误:data");
 
     if (req.HasError)
     {
@@ -10,12 +10,15 @@
     }
     else
     {
+        var code = Json.Decode<Dictionary<string, object>>(Base64Util.Decode(str));
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
             var id = (int)code["id"];
             var data = db.Query("select PSP_NAME,PSP_CODE,VSR_START_SHARE_TIME from BVoucherSharing join LVsrCsv on LRV_VSR_ID=VSR_ID join BCashVoucher on LRV_CSV_ID=CSV_ID join BProspect on CSV_PSP_ID=PSP_ID where VSR_ID=@p0", id);
 
-            Json.Write(new { success = true, data = data }, Output);
+            var user = db.QuerySingle("select PSP_ID,PSP_NAME,PSP_CODE from BVoucherSharing join BCashVoucher on VSR_CSV_ID=CSV_ID join BProspect on CSV_PSP_ID=PSP_ID where VSR_ID=@p0", id);
+
+            Json.Write(new { success = true, data = data, user = user }, Output);
         }
     }
 }

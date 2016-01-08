@@ -1,0 +1,72 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int orderId = req.Int("orderId");
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.QuerySingle("select PUR_ID,PUR_CODE,PUR_DT,PUR_PTY_ID,PTY_DESC,PUR_PUS_ID,PUR_CNL_ID,CNL_DESC,CNL_CLT_ID,PUS_DESC,PUR_PAY_ID,PAY_DESC,PUR_PAS_ID,PAS_DESC,PUR_AMOUNT,PUR_EXP_IN_AMOUNT,XPU_EXPRESS_CODE,XPU_EXPRESS_STATUS,XPU_EXP_ID,EXP_NAME,PUR_ORA_ID,ORA_NAME,ORA_ADDRESS,ORA_MOBILE,CTY_DESC,REG_DESC from BPurchase join XPurchase on PUR_ID=XPU_PUR_ID join RPurchaseStatus on PUR_PUS_ID=PUS_ID left join RPayType on PAY_ID=PUR_PAY_ID join RPurchaseType on PTY_ID=PUR_PTY_ID left join BChannel on PUR_CNL_ID=CNL_ID left join RPayStatus on PAS_ID=PUR_PAS_ID left join BExpressCompany on XPU_EXP_ID=EXP_ID left join BOrderAddress on PUR_ORA_ID=ORA_ID left join RCity on ORA_CTY_ID=CTY_ID left join RRegion on ORA_REG_ID=REG_ID where PUR_ID=@p0 and PUR_PSP_ID=@p1", orderId, userId);
+
+            if (data != null)
+            {
+                var userData = db.QuerySingle("select USL_LOGINNAME,USL_PASSWORD from WUserLogin where USL_PSP_ID=@p0", userId);
+
+
+                if (data.PUR_AMOUNT == null)
+                {
+                    data.PUR_AMOUNT = 0;
+                }
+                if (data.PUR_PUS_ID == 1 && data.PUR_PAS_ID == 1)
+                {
+                    data.PUS_DESC = "待付款";
+                }
+                else if (data.PUR_PUS_ID == 25 || data.PUR_PUS_ID == 2 || (data.PUR_PAS_ID == 2 && data.PUR_PUS_ID == 1))
+                {
+                    data.PUS_DESC = "待发货";
+                }
+                else if (data.PUR_PUS_ID == 6 || data.PUR_PUS_ID == 11 || data.PUR_PUS_ID == 18 || data.PUR_PUS_ID == 19)
+                {
+                    data.PUS_DESC = "配送中";
+                }
+                else if (data.PUR_PUS_ID == 8 || data.PUR_PUS_ID == 9 || data.PUR_PUS_ID == 20 || data.PUR_PUS_ID == 30)
+                {
+                    data.PUS_DESC = "已完成";
+                }
+
+                IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_DISCONTINUED_FLAG,MSP_DISCONTINUED_FLAG,WPP_PRD_ID,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE,LPK_CHANNEL_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join BProdHeader on PRH_ID=PRD_PRH_ID left join WProductPicture on WPP_PRD_ID=PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRH_PRT_ID=1 and LPK_PUR_ID=@p0 and PRD_ID!=100000", data.PUR_ID);
+
+                data.Children = children;
+
+                if (children != null)
+                {
+                    children.All(prd =>
+                    {
+                        if (prd.MSP_PRD_ID != null)
+                        {
+                            prd.PRD_DISCONTINUED_FLAG = prd.MSP_DISCONTINUED_FLAG;
+                        }
+                        prd.WPP_LIST_PIC = System.Configuration.ConfigurationManager.AppSettings["Media"] + prd.WPP_LIST_PIC;
+                        prd.PRD_SPEC = prd.PRD_SPEC.Split('|')[0];
+                        return true;
+                    });
+                }
+            }
+
+            Json.Write(new { success = true, data = data }, Output);
+        }
+    }
+}

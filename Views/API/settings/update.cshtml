@@ -10,7 +10,7 @@
 
     if (info != null && version != (string)info["Version"])
     {
-        Json.Write(new { success = true, updateUrl = System.Text.RegularExpressions.Regex.IsMatch(Request.UserAgent, @"Android") ? info["IOSUrl"] : info["AndroidUrl"], versionName = "abs_" + (string)info["Version"], text = info["Content"] }, Output);
+        Json.Write(new { success = true, updateUrl = System.Text.RegularExpressions.Regex.IsMatch(Request.UserAgent, @"Android") ? info["AndroidUrl"] : info["IOSUrl"], versionName = "abs_" + (string)info["Version"], text = info["Content"] }, Output);
     }
     else
     {

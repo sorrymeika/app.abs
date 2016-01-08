@@ -48,6 +48,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
@@ -74,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AlipayDirectController.cs" />
+    <Compile Include="Controllers\AlipayAppController.cs" />
     <Compile Include="Controllers\AlipayWAPController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Global.asax.cs">
@@ -184,6 +189,15 @@
     <Content Include="Views\API\user\get_order_status.cshtml" />
     <Content Include="Views\API\user\get_coupon_status.cshtml" />
     <Content Include="Views\API\shop\wxpayqrcode.cshtml" />
+    <Content Include="Views\API\user\get_coupon_user.cshtml" />
+    <Content Include="Views\API\user\get_shared_coupon.cshtml" />
+    <Content Include="Views\API\order\get.cshtml" />
+    <Content Include="Views\API\settings\get_news.cshtml" />
+    <Content Include="Views\API\settings\news_list.cshtml" />
+    <Content Include="Views\API\manage\add_news.cshtml" />
+    <Content Include="Views\API\manage\delete_news.cshtml" />
+    <Content Include="Views\API\manage\modify_news.cshtml" />
+    <Content Include="Views\API\user\get_month_by_date.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

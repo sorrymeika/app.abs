@@ -1,4 +1,6 @@
 ﻿@using SL.Util
+@using WxPayAPI
+
 @{
     RequestUtil req = new RequestUtil();
 
@@ -15,19 +17,28 @@
 
         var result = PayUtil.WxAppPay(order_no, fee, Request.UserHostAddress, "ABS商品", "ABS", "ABS" + purId);
 
-        var json = Json.Decode<SortedDictionary<string, object>>(result.ToJson());
-        var success = json["return_code"].ToString() == "SUCCESS" ? 0 : 1;
-        json["retcode"] = success;
-        json["retmsg"] = json["return_msg"];
-        if (success == 0)
-        {
-            json["partnerid"] = json["mch_id"];
-            json["prepayid"] = json["prepay_id"];
-            json["noncestr"] = json["nonce_str"];
-            json["package"] = "Sign=WXPay";
-        }
+        //var json = Json.Decode<SortedDictionary<string, object>>(result.ToJson());
+        //var success = json["return_code"].ToString() == "SUCCESS" ? 0 : 1;
+        //json["retcode"] = success;
+        //json["retmsg"] = json["return_msg"];
+        //if (success == 0)
+        //{
+        //    json["partnerid"] = json["mch_id"];
+        //    json["prepayid"] = json["prepay_id"];
+        //    json["noncestr"] = json["nonce_str"];
 
-        Json.Write(json, Output);
+        //    DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+        //    DateTime dtNow = DateTime.Parse(DateTime.Now.ToString());
+        //    TimeSpan toNow = dtNow.Subtract(dtStart);
+        //    string timeStamp = toNow.Ticks.ToString();
+        //    timeStamp = timeStamp.Substring(0, timeStamp.Length - 7);
+
+        //    json["timestamp"] = timeStamp;
+
+        //    json["package"] = "Sign=WXPay";
+        //}
+
+        Output.Write(result.ToJson());
     }
     else
     {

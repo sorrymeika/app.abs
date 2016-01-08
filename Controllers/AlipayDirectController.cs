@@ -96,7 +96,7 @@ namespace SL.Web.Controllers
                 string sHtmlText = Alipay.Direct.Submit.BuildRequest(sParaTemp);
                 return Content(sHtmlText);
 
-               // return Json(new { success = true, url = "alipays://platformapi/startApp?appId=10000007&sourceId=excashierQrcodePay&actionType=route&qrcode=https%3A%2F%2Fqr.alipay.com%2Fupxjqxbfjchmcbig00" });
+                // return Json(new { success = true, url = "alipays://platformapi/startApp?appId=10000007&sourceId=excashierQrcodePay&actionType=route&qrcode=https%3A%2F%2Fqr.alipay.com%2Fupxjqxbfjchmcbig00" });
             }
         }
 
@@ -214,6 +214,7 @@ namespace SL.Web.Controllers
 
                         //注意：
                         //该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
+                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
                     }
                     else
                     {

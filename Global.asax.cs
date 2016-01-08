@@ -73,6 +73,18 @@ namespace SL.Web
                 "AlipayDirect/{action}",
                 new { controller = "AlipayDirect", action = "Callback" }
             );
+
+            routes.MapRoute(
+                "AlipayAppPay",
+                "AlipayApp/Pay",
+                new { controller = "AlipayApp", action = "Pay" }
+            );
+
+            routes.MapRoute(
+                "AlipayApp",
+                "AlipayApp/{action}",
+                new { controller = "AlipayDirect", action = "Notify" }
+            );
             #endregion
 
             routes.MapRoute(

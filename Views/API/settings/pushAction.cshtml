@@ -1,0 +1,15 @@
+﻿@using PushSharp.Apple;
+@using PushSharp;
+@{
+    //Create our push services broker
+    var push = new PushSharp.PushBroker();
+
+    //Registering the Apple Service and sending an iOS Notification
+    var appleCert = File.ReadAllBytes("ApnsSandboxCert.p12");
+    push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "pwd"));
+    push.QueueNotification(new AppleNotification()
+                               .ForDeviceToken("DEVICE TOKEN HERE")
+                               .WithAlert("Hello World!")
+                               .WithBadge(7)
+                               .WithSound("sound.caf"));
+}

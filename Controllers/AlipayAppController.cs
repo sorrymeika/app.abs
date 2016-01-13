@@ -160,7 +160,7 @@ namespace SL.Web.Controllers
                     //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
                     //获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
 
-                    //商户订单号                string out_trade_no = Request.Form["out_trade_no"];
+                    string out_trade_no = Request.Form["out_trade_no"];//商户订单号                
 
                     //支付宝交易号                string trade_no = Request.Form["trade_no"];
 
@@ -177,6 +177,9 @@ namespace SL.Web.Controllers
                         //注意：
                         //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
                         //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+
+                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+
                     }
                     else if (Request.Form["trade_status"] == "TRADE_SUCCESS")
                     {
@@ -187,6 +190,9 @@ namespace SL.Web.Controllers
                         //注意：
                         //付款完成后，支付宝系统发送该交易状态通知
                         //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+
+                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+
                     }
                     else
                     {

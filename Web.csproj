@@ -150,6 +150,14 @@
       <Project>{549eb3bc-dae5-4ad9-b717-d4afb0911734}</Project>
       <Name>Alipay</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PushSharp\PushSharp.Apple\PushSharp.Apple.csproj">
+      <Project>{83c67156-893d-4aff-9169-db34771989cb}</Project>
+      <Name>PushSharp.Apple</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PushSharp\PushSharp.Core\PushSharp.Core.csproj">
+      <Project>{836f225f-6cd9-48de-910c-70f8a7cf54aa}</Project>
+      <Name>PushSharp.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SL\SL.csproj">
       <Project>{D8E09BBC-5A9D-441B-B403-988286537F2B}</Project>
       <Name>SL</Name>
@@ -198,6 +206,7 @@
     <Content Include="Views\API\manage\delete_news.cshtml" />
     <Content Include="Views\API\manage\modify_news.cshtml" />
     <Content Include="Views\API\user\get_month_by_date.cshtml" />
+    <Content Include="Views\API\settings\pushAction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

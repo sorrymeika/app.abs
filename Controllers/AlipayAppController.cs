@@ -32,15 +32,20 @@ namespace SL.Web.Controllers
             {
                 return Json(new { retcode = -1, retmsg = "订单不存在" }, JsonRequestBehavior.AllowGet);
             }
-            if (data.Status == 0)
+            if (data.PUR_PUS_ID == 0)
             {
-                return Json(new { retcode = -1, retmsg = "订单已被取消" }, JsonRequestBehavior.AllowGet);
+                //return Json(new { retcode = -1, retmsg = "订单已被取消" }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT == 0)
+            {
+                return Json(new { retcode = -1, retmsg = "订单金额为0，无需支付" }, JsonRequestBehavior.AllowGet);
             }
 
             var showUrl = "http://m.abs.cn";
 
             var productName = "爱彼此家居商品:" + data.PUR_CODE;
-            var amount = (data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT).ToString("0.##");
+            var amount = (data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT).ToString("0.00");
 
             Alipay.APP.Config.Partner = System.Configuration.ConfigurationManager.AppSettings["Alipay_Partner"];
             Alipay.APP.Config.Private_key = System.Configuration.ConfigurationManager.AppSettings["ALIPAY_PRIVATE_KEY"];
@@ -71,7 +76,7 @@ namespace SL.Web.Controllers
             //获取私钥并将商户信息签名,外部商户可以根据情况存放私钥和签名,只需要遵循RSA签名规范,并将签名字符串base64编码和UrlEncode
             String signedString = RSAFromPkcs8.sign(orderSpec, Alipay.APP.Config.Private_key, Alipay.APP.Config.Input_charset);
 
-            return Json(new { retcode = 0, retmsg = "", orderSpec = orderSpec, signedString = signedString }, JsonRequestBehavior.AllowGet);
+            return Json(new { retcode = 0, retmsg = "", orderSpec = orderSpec, signedString = HttpUtility.UrlEncode(signedString) }, JsonRequestBehavior.AllowGet);
         }
 
         private string description(dynamic self)
@@ -97,10 +102,6 @@ namespace SL.Web.Controllers
             if (!string.IsNullOrEmpty(self.productDescription))
             {
                 discription += "&body=\"" + self.productDescription + "\"";
-            }
-            if (!string.IsNullOrEmpty(self.amount))
-            {
-                discription += "&body=\"" + self.amount + "\"";
             }
             if (!string.IsNullOrEmpty(self.amount))
             {
@@ -142,12 +143,15 @@ namespace SL.Web.Controllers
             return discription;
         }
 
-        public ActionResult Notify(int orderid)
+        public ActionResult Notify()
         {
             SortedDictionary<string, string> sPara = GetRequestPost();
 
             if (sPara.Count > 0)//判断是否有带返回参数
             {
+                Alipay.APP.Config.Partner = System.Configuration.ConfigurationManager.AppSettings["Alipay_Partner"];
+                Alipay.APP.Config.Private_key = System.Configuration.ConfigurationManager.AppSettings["ALIPAY_PRIVATE_KEY"];
+
                 Alipay.APP.Notify aliNotify = new Alipay.APP.Notify();
                 bool verifyResult = aliNotify.Verify(sPara, Request.Form["notify_id"], Request.Form["sign"]);
 

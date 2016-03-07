@@ -85,15 +85,19 @@
 
                         db.Execute("update XProspect set XPS_ROOT_IVC_ID=@p2,XPS_IVC_ID=@p1 where XPS_PSP_ID=@p0", id, ivcId, userIvc.XPS_ROOT_IVC_ID);
 
-                        var livData = db.QuerySingle("select LIV_VCA_ID,LIV_QTY,LIV_START_TIME,LIV_END_TIME from  LIvcVca where LIV_IVC_ID=@p0 and GetDate() between LIV_START_TIME and LIV_END_TIME and LIV_DELETED_FLAG=0", ivcId);
+                        var livData = db.Query("select LIV_VCA_ID,LIV_QTY,LIV_START_TIME,LIV_END_TIME from  LIvcVca where LIV_IVC_ID=@p0 and GetDate() between LIV_START_TIME and LIV_END_TIME and LIV_DELETED_FLAG=0", ivcId);
 
-                        if (livData != null && (userIvc.XPS_IVC_ID == null || userIvc.XPS_IVC_ID == 0))
+                        if (livData != null && livData.Count != 0 && (userIvc.XPS_IVC_ID == null || userIvc.XPS_IVC_ID == 0))
                         {
                             invitedMsg = "插入优惠券:";
-                            for (var i = 0; i < livData.LIV_QTY; i++)
+
+                            foreach (var livItem in livData)
                             {
-                                db.Execute("insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT,CSV_PSP_ID,CSV_USE_FLAG) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4,@p5,1)", livData.LIV_VCA_ID, 0, RandomUtil.Create(7) + i, DateTime.Now, DateTime.Today.AddDays(30), id);
-                                invitedMsg += i + "|";
+                                for (var i = 0; i < livItem.LIV_QTY; i++)
+                                {
+                                    db.Execute("if not exists (select 1 from BCashVoucher where CSV_VCA_ID=865 and CSV_VCA_ID=@p0 and CSV_PSP_ID=@p5) insert into BCashVoucher (CSV_VCA_ID,CSV_VDP_ID,CSV_CODE,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_START_DT,CSV_END_DT,CSV_PSP_ID,CSV_USE_FLAG) values (@p0,@p1,@p2,GetDate(),GetDate(),@p3,@p4,@p5,1)", livItem.LIV_VCA_ID, 0, RandomUtil.Create(7) + i, livItem.LIV_START_TIME, livItem.LIV_END_TIME, id);
+                                    invitedMsg += i + "|";
+                                }
                             }
                         }
                         else

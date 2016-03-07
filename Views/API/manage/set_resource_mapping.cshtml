@@ -1,6 +1,7 @@
 ﻿@using SL.Util
 @{
     SL.Util.RequestUtil req = new SL.Util.RequestUtil();
+    string version = req.String("Version");
     string key = req.String("Key");
     string value = req.String("Value");
 
@@ -10,7 +11,7 @@
         return;
     }
 
-    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_resource_settings");
+    SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_resource_settings" + version ?? "");
 
     var info = setting.FirstOrDefault();
 

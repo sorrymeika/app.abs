@@ -13,6 +13,15 @@
     if (data != null)
     {
         int fee = Convert.ToInt32((data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT) * 100);
+
+        if (fee == 0)
+        {
+            WxPayData res = new WxPayData();
+            res.SetValue("retcode", 1);
+            res.SetValue("retmsg", "订单金额为0，无需支付");
+            Output.Write(res.ToJson());
+            return;
+        }
         int purId = data.PUR_ID;
 
         var result = PayUtil.WxAppPay(order_no, fee, Request.UserHostAddress, "ABS商品", "ABS", "ABS" + purId);

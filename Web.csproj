@@ -167,6 +167,8 @@
     <Content Include="Views\API\manage\UMEditor.ImageUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ApnsProductionCert.p12" />
+    <Content Include="log.txt" />
     <None Include="Properties\PublishProfiles\Static.pubxml" />
     <Content Include="Views\API\user\login.cshtml" />
     <Content Include="Views\API\_blank.cshtml" />
@@ -207,6 +209,7 @@
     <Content Include="Views\API\manage\modify_news.cshtml" />
     <Content Include="Views\API\user\get_month_by_date.cshtml" />
     <Content Include="Views\API\settings\pushAction.cshtml" />
+    <Content Include="Views\API\settings\pushActionTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

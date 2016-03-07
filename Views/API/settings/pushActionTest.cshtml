@@ -1,0 +1,85 @@
+﻿@using PushSharp.Apple;
+@using PushSharp;
+@using SL.Util;
+@using System.Security.Cryptography.X509Certificates;
+
+@{
+    RequestUtil req = new RequestUtil();
+
+    string deviceToken = "<2c8f938d 5365ff1c 1c730929 b7f004c2 ef850efc 39e6014c a3833dd0 63c95ed6>";
+    string msg = "adsfasf";
+    int badge = 1;
+
+    deviceToken = deviceToken.TrimStart('<').TrimEnd('>').Replace(" ", "");
+
+
+    //Create our push services broker
+    var push = new PushSharp.PushBroker();
+
+    push.OnNotificationSent += pusher_OnNotificationSent;//发送成功事件
+    push.OnNotificationFailed += pusher_OnNotificationFailed;//发送失败事件
+    push.OnChannelCreated += pusher_OnChannelCreated;
+    push.OnChannelDestroyed += pusher_OnChannelDestroyed;
+    push.OnChannelException += pusher_OnChannelException;
+    push.OnDeviceSubscriptionChanged += pusher_OnDeviceSubscriptionChanged;
+    push.OnDeviceSubscriptionExpired += pusher_OnDeviceSubscriptionExpired;
+    push.OnNotificationRequeue += pusher_OnNotificationRequeue;
+    push.OnServiceException += pusher_OnServiceException;
+
+    //Registering the Apple Service and sending an iOS Notification
+    var appleCert = File.ReadAllBytes(Server.MapPath("~/ApnsProductionCert.p12"));
+
+    push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "12345Qwert"));
+    push.QueueNotification(new AppleNotification()
+                               .ForDeviceToken(deviceToken)
+                               .WithAlert(msg)
+                               .WithBadge(badge)
+                               .WithSound("default"));
+}
+
+@functions {
+    void pusher_OnServiceException(object sender, Exception error)
+    {
+        Console.WriteLine("消息发送失败，错误详情：" + error.ToString());
+    }
+
+    void pusher_OnNotificationRequeue(object sender, PushSharp.Core.NotificationRequeueEventArgs e)
+    {
+        Console.WriteLine("pusher_OnNotificationRequeue");
+    }
+
+    void pusher_OnDeviceSubscriptionExpired(object sender, string expiredSubscriptionId, DateTime expirationDateUtc, PushSharp.Core.INotification notification)
+    {
+        Console.WriteLine("pusher_OnDeviceSubscriptionChanged");
+    }
+
+    void pusher_OnDeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, PushSharp.Core.INotification notification)
+    {
+        Console.WriteLine("pusher_OnDeviceSubscriptionChanged");
+    }
+
+    void pusher_OnChannelException(object sender, PushSharp.Core.IPushChannel pushChannel, Exception error)
+    {
+        Console.WriteLine("消息发送失败，错误详情：" + error.ToString());
+    }
+
+    void pusher_OnChannelDestroyed(object sender)
+    {
+        Console.WriteLine("pusher_OnChannelDestroyed");
+    }
+
+    void pusher_OnChannelCreated(object sender, PushSharp.Core.IPushChannel pushChannel)
+    {
+        Console.WriteLine("pusher_OnChannelCreated");
+    }
+
+    void pusher_OnNotificationFailed(object sender, PushSharp.Core.INotification notification, Exception error)
+    {
+        Console.WriteLine("消息发送失败，错误详情：" + error.ToString());
+    }
+
+    void pusher_OnNotificationSent(object sender, PushSharp.Core.INotification notification)
+    {
+        Console.WriteLine("消息发送成功！");
+    }
+}

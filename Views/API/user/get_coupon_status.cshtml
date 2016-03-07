@@ -24,7 +24,12 @@
             bool overdue = DateTime.Now > data.CSV_END_DT;
             if (overdue)
             {
-                Json.Write(new { success = false, msg = "该券已过期" }, Output);
+                Json.Write(new { success = false, overdue = true, msg = "该券已过期" }, Output);
+                return;
+            }
+            if (data.CSV_VCA_ID == 865)
+            {
+                Json.Write(new { success = false, overdue = true, msg = "本优惠券不能分享哦" }, Output);
                 return;
             }
 
@@ -40,15 +45,15 @@
                 int csvid;
                 db.Execute("insert into BCashVoucher (CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_VDP_ID) values (@p0,@p1,@p2,@p3,@p4,@p5,@p6,@p7)", out csvid, data.CSV_CODE + 1, data.CSV_VCA_ID, 0, data.CSV_START_DT, data.CSV_END_DT, data.CSV_CREATION_DT, data.CSV_UPDATE_DT, data.CSV_VDP_ID);
 
-                db.Execute("insert into LVsrCsv (LRV_VSR_ID,LRV_CSV_ID) values (@p0,@p1)", vsrId, csvid);
+                db.Execute("insert into LVsrCsv (LRV_VSR_ID,LRV_CSV_ID,LRV_PSP_ID) values (@p0,@p1,@p2)", vsrId, csvid, userId);
             }
             else
             {
                 vsrId = shareInfo.VSR_ID;
             }
 
-            var couponData = Json.Encode(new { uid = userId, id = vsrId, sign = Md5.MD5(DateTime.Now.ToString()) });
-            string url = RequestFile.FullUrl("dest/index.html#/couponshare?code=" + Base64Util.Encode(couponData));
+            var couponData = Json.Encode(new { uid = userId, origCsvId = couponId, id = vsrId, sign = Md5.MD5(DateTime.Now.ToString()) });
+            string url = RequestFile.FullUrl("dest1.1.0/index.html#/couponshare?code=" + Base64Util.Encode(couponData));
 
             Json.Write(new { success = true, status = data.CSV_USE_FLAG, overdue = overdue, url = url }, Output);
         }

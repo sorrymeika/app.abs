@@ -1,6 +1,6 @@
 select * from BMessage order by MSG_ID desc
 
-select top 20 VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID left join (select min(LVP_PRD_ID) as LVP_PRD_ID,LVP_VCA_ID from LVcaPrd group by LVP_VCA_ID) a on LVP_VCA_ID=VCA_ID
+select top 20 LVP_PRD_ID,VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID left join (select min(LVP_PRD_ID) as LVP_PRD_ID,LVP_VCA_ID from LVcaPrd group by LVP_VCA_ID) a on LVP_VCA_ID=VCA_ID
 
 select * from HMemberLogin
 
@@ -8,7 +8,7 @@ alter table HMemberLogin drop column HML_DEVICEµÇÂ¼Éè±¸
 
 alter table HMemberLogin add HML_DEVICE varchar(100)
 
-select * from BProspect
+select * from BProspect left join XProspect on PSP_ID=XPS_PSP_ID
 
 select * from BOrderAddress
 

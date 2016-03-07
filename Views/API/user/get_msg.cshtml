@@ -1,4 +1,6 @@
-﻿@using SL.Util
+﻿@using SL.Util;
+@using PushSharp.Apple;
+@using PushSharp;
 @{
     RequestUtil req = new RequestUtil();
 
@@ -32,6 +34,8 @@
                 out total,
                 new Dictionary<string, bool> { { "MSG_DT", false } });
 
+            bool hasRead = false;
+
             if (data != null)
             {
                 data.All(a =>
@@ -40,6 +44,7 @@
                     {
                         if (a.LPM_STATUS == 0)
                         {
+                            hasRead = true;
                             db.Execute("update LPspMsg set LPM_STATUS=1 where LPM_MSG_ID=@p0 and LPM_PSP_ID=@p1", a.MSG_ID, userId);
                         }
                     }
@@ -47,11 +52,33 @@
                     {
                         if (a.LPM_STATUS == null)
                         {
+                            hasRead = true;
+
                             db.Execute("insert into LPspMsg (LPM_STATUS,LPM_MSG_ID,LPM_PSP_ID) values (1,@p0,@p1)", a.MSG_ID, userId);
                         }
                     }
                     return true;
                 });
+            }
+
+            if (hasRead)
+            {
+                var deviceToken = db.QueryValue<string>("select XPS_MOBILE_IMEI from XProspect where XPS_PSP_ID=@p0", userId);
+
+                if (deviceToken.StartsWith("<"))
+                {
+                    deviceToken = deviceToken.TrimStart('<').TrimEnd('>').Replace(" ", "");
+
+                    //Create our push services broker
+                    var push = new PushSharp.PushBroker();
+
+                    //Registering the Apple Service and sending an iOS Notification
+                    var appleCert = File.ReadAllBytes(Server.MapPath("~/ApnsProductionCert.p12"));
+                    push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "12345Qwert"));
+                    push.QueueNotification(new AppleNotification()
+                                               .ForDeviceToken(deviceToken)
+                                               .WithBadge(0));
+                }
             }
 
             Json.Write(new { success = true, data = data, total = total }, Output);

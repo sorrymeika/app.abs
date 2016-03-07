@@ -49,7 +49,7 @@
                 bool hasMsg = false;
                 foreach (var vdp in vdpList)
                 {
-                    if (!db.Exists("select 1 from BCashVoucher where CSV_VDP_ID=@p0 and CSV_VCA_ID=@p1 and CSV_PSP_ID=@p2", vdp.VDP_ID, vdp.VCA_ID, userId))
+                    if (!db.Exists("select 1 from BCashVoucher where ((CSV_VDP_ID=@p0 and CSV_VCA_ID=@p1) or (CSV_VCA_ID=@p1 and CSV_VCA_ID=865)) and CSV_PSP_ID=@p2", vdp.VDP_ID, vdp.VCA_ID, userId))
                     {
                         vdpMessage = vdpList[0].VDP_MESSAGE;
                         hasMsg = true;

@@ -1,15 +1,47 @@
 ﻿@using PushSharp.Apple;
 @using PushSharp;
-@{
-    //Create our push services broker
-    var push = new PushSharp.PushBroker();
+@using SL.Util;
 
-    //Registering the Apple Service and sending an iOS Notification
-    var appleCert = File.ReadAllBytes("ApnsSandboxCert.p12");
-    push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "pwd"));
-    push.QueueNotification(new AppleNotification()
-                               .ForDeviceToken("DEVICE TOKEN HERE")
-                               .WithAlert("Hello World!")
-                               .WithBadge(7)
-                               .WithSound("sound.caf"));
+@{
+    RequestUtil req = new RequestUtil();
+
+    string deviceToken = HttpUtility.UrlDecode(req.String("device_token", false, "参数错误:device_token"));
+    string token = req.String("token", false, "参数错误:token");
+    string msg = req.String("msg", false, "参数错误:msg");
+    int badge = req.Int("badge", false, "参数错误:badge");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+        return;
+    }
+    if (!deviceToken.StartsWith("<"))
+    {
+        return;
+    }
+    string pwd = "ABSabs321";
+
+    if (Md5.MD5(pwd + DateTime.Now.ToString("yyyyMMddHHmm")).Equals(token, StringComparison.OrdinalIgnoreCase)
+        || Md5.MD5(pwd + DateTime.Now.AddMinutes(1).ToString("yyyyMMddHHmm")).Equals(token, StringComparison.OrdinalIgnoreCase)
+        || Md5.MD5(pwd + DateTime.Now.AddMinutes(-1).ToString("yyyyMMddHHmm")).Equals(token, StringComparison.OrdinalIgnoreCase))
+    {
+        deviceToken = deviceToken.TrimStart('<').TrimEnd('>').Replace(" ", "");
+
+        //Create our push services broker
+        var push = new PushSharp.PushBroker();
+
+        //Registering the Apple Service and sending an iOS Notification
+        var appleCert = File.ReadAllBytes(Server.MapPath("~/ApnsProductionCert.p12"));
+        push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "12345Qwert"));
+        push.QueueNotification(new AppleNotification()
+                                   .ForDeviceToken(deviceToken)
+                                   .WithAlert(msg)
+                                   .WithBadge(badge)
+                                   .WithSound("default"));
+    }
+    else
+    {
+        Json.Write(new { success = false, msg = "token_error" }, Output);
+    }
+
 }

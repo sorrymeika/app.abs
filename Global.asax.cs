@@ -83,7 +83,7 @@ namespace SL.Web
             routes.MapRoute(
                 "AlipayApp",
                 "AlipayApp/{action}",
-                new { controller = "AlipayDirect", action = "Notify" }
+                new { controller = "AlipayApp", action = "Notify" }
             );
             #endregion
 

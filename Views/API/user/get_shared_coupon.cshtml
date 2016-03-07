@@ -21,11 +21,22 @@
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
             var id = (int)code["id"];
+            var origUserId = (int)code["uid"];
+            var origCsvId = (int)code["origCsvId"];
+
+            var userFlag = db.QueryValue<byte>("select CSV_USE_FLAG from BCashVoucher where CSV_ID=@p0", origCsvId);
+
+            if (userFlag == 2)
+            {
+                Json.Write(new { success = false, msg = "券已使用，下次早些来哦" }, Output);
+                return;
+            }
+
             var data = db.Query("select CSV_ID,CSV_PSP_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BVoucherSharing join LVsrCsv on LRV_VSR_ID=VSR_ID join BCashVoucher on LRV_CSV_ID=CSV_ID where VSR_ID=@p0", id);
 
             if (data == null)
             {
-                Json.Write(new { success = false, msg = "券已领完，下次早些来哦" }, Output);
+                Json.Write(new { success = false, msg = "不存在的优惠券" }, Output);
                 return;
             }
 
@@ -38,11 +49,13 @@
             var coupon = data.FirstOrDefault(a => a.CSV_USE_FLAG == 0 && DateTime.Now < a.CSV_END_DT);
             if (coupon == null)
             {
+                db.Execute("update BCashVoucher set CSV_USE_FLAG=2 where CSV_ID=@p0", origCsvId);
                 Json.Write(new { success = false, msg = "券已领完，下次早些来哦" }, Output);
                 return;
             }
 
-            db.Execute("update BCashVoucher set CSV_PSP_ID=@p0,CSV_USE_FLAG=1 where CSV_ID=@p0", coupon.CSV_ID);
+            db.Execute("update BCashVoucher set CSV_PSP_ID=@p1,CSV_USE_FLAG=1 where CSV_ID=@p0", coupon.CSV_ID, userId);
+            db.Execute("update BCashVoucher set CSV_PSP_ID=@p1,CSV_USE_FLAG=2 where CSV_ID=@p0", origCsvId, origUserId);
 
             Json.Write(new { success = true, data = coupon }, Output);
         }

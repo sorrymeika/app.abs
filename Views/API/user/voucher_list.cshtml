@@ -30,7 +30,7 @@
 
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.Query("select LVP_PRD_ID,VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID left join (select min(LVP_PRD_ID) as LVP_PRD_ID,LVP_VCA_ID from LVcaPrd join BProduct on PRD_ID=LVP_PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRD_DISCONTINUED_FLAG!=1 and (MSP_DISCONTINUED_FLAG!=1) group by LVP_VCA_ID) a on LVP_VCA_ID=VCA_ID where " + where + " order by CSV_END_DT desc", parameters.ToArray());
+            var data = db.Query("select LVP_PRD_ID,VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,CSV_VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID left join (select min(LVP_PRD_ID) as LVP_PRD_ID,LVP_VCA_ID from LVcaPrd join BProduct on PRD_ID=LVP_PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRD_DISCONTINUED_FLAG!=1 and (MSP_DISCONTINUED_FLAG is null or MSP_DISCONTINUED_FLAG!=1) group by LVP_VCA_ID) a on LVP_VCA_ID=VCA_ID where " + where + " order by CSV_END_DT desc", parameters.ToArray());
 
             var closeNumber = 0;
             if (data != null)

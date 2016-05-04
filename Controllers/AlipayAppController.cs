@@ -182,7 +182,7 @@ namespace SL.Web.Controllers
                         //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
                         //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
 
-                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2,PUR_PAY_ID=24 where PUR_CODE=@p0", out_trade_no);
 
                     }
                     else if (Request.Form["trade_status"] == "TRADE_SUCCESS")
@@ -195,7 +195,7 @@ namespace SL.Web.Controllers
                         //付款完成后，支付宝系统发送该交易状态通知
                         //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
 
-                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2 where PUR_CODE=@p0", out_trade_no);
+                        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2,PUR_PAY_ID=24 where PUR_CODE=@p0", out_trade_no);
 
                     }
                     else

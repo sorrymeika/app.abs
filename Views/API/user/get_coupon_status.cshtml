@@ -20,14 +20,14 @@
         //使用状态（0.未领用且未使用；1.已领用未使用；2.已使用）
         using (SL.Data.Database db = SL.Data.Database.Open())
         {
-            var data = db.QuerySingle("select CSV_ID,CSV_USE_FLAG,CSV_CODE,CSV_START_DT,CSV_END_DT,CSV_VCA_ID,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_VDP_ID from BCashVoucher where CSV_ID=@p0", couponId);
+            var data = db.QuerySingle("select CSV_ID,CSV_USE_FLAG,CSV_CODE,CSV_START_DT,CSV_END_DT,CSV_VCA_ID,CSV_CREATION_DT,CSV_UPDATE_DT,CSV_VDP_ID,VCA_SHAREABLE_FLAG from BCashVoucher left join BVoucherActivity on CSV_VCA_ID=VCA_ID where CSV_ID=@p0", couponId);
             bool overdue = DateTime.Now > data.CSV_END_DT;
             if (overdue)
             {
                 Json.Write(new { success = false, overdue = true, msg = "该券已过期" }, Output);
                 return;
             }
-            if (data.CSV_VCA_ID == 865)
+            if (data.VCA_SHAREABLE_FLAG != null && !data.VCA_SHAREABLE_FLAG)
             {
                 Json.Write(new { success = false, overdue = true, msg = "本优惠券不能分享哦" }, Output);
                 return;

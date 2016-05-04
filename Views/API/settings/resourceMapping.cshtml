@@ -1,6 +1,6 @@
 ﻿@using SL.Util
 @{
-    var version = Request.Params["v"];
+    var version = Request.Params["v"] ?? (Request.UserAgent.EndsWith("1.1.0") ? "1.1.0" : null);
 
     SettingUtil<Dictionary<string, object>> setting = new SettingUtil<Dictionary<string, object>>("app_resource_settings" + (version ?? ""));
 

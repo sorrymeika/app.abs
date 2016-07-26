@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -210,9 +211,24 @@
     <Content Include="Views\API\user\get_month_by_date.cshtml" />
     <Content Include="Views\API\settings\pushAction.cshtml" />
     <Content Include="Views\API\settings\pushActionTest.cshtml" />
+    <Content Include="Views\API\cmbpay\pay.cshtml" />
+    <Content Include="Views\API\cmbpay\notify.cshtml" />
+    <Content Include="public.key" />
+    <Content Include="Views\API\cmbpay\notifysign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="CMBCHINALib">
+      <Guid>{D0146834-19FF-484E-8234-C597E819A33A}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

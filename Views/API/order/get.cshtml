@@ -47,6 +47,9 @@
                     data.PUS_DESC = "已完成";
                 }
 
+                data.isShowShare = DateUtil.DaysDiff(DateTime.Now, data.PUR_DT) <= 90;
+
+
                 IList<dynamic> children = db.Query("select PRD_ID,PRD_CODE,PRD_DISCONTINUED_FLAG,MSP_DISCONTINUED_FLAG,WPP_PRD_ID,PRD_NAME,WPP_LIST_PIC,LPK_QTY,PRD_COLOR,PRD_SPEC,PRD_MEMBER_PRICE,LPK_CHANNEL_PRICE from LPrdPur join BProduct on LPK_PRD_ID=PRD_ID join BProdHeader on PRH_ID=PRD_PRH_ID left join WProductPicture on WPP_PRD_ID=PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where PRH_PRT_ID=1 and LPK_PUR_ID=@p0 and PRD_ID!=100000", data.PUR_ID);
 
                 data.Children = children;

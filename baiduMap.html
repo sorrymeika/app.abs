@@ -28,7 +28,7 @@
     <div id="allmap"></div>
     <form class="search" onsubmit="return false"><input class="js_shopname" placeholder="搜索" sn-model="search" type="search" /></form>
     <ul class="js_shoplist shoplist">
-        <li sn-repeat="item in data|filter:contains(item.STR_ADDRESS,search)" data-longitude="{{item.point.lng}}" data-latitude="{{item.point.lat}}"><b>{{item.STR_NAME}}</b><span>{{item.STR_ADDRESS}}</span><span>{{!item.Distance?'':item.Distance < 1 ? Math.round(item.Distance * 100)+"m": (Math.round(item.Distance * 100) / 100 + 'km')}}</span></li>
+        <li sn-repeat="item,i in data|filter:this.filterData(item.STR_ADDRESS,search,i)" data-longitude="{{item.point.lng}}" data-latitude="{{item.point.lat}}"><b>{{item.STR_NAME}}</b><span>{{item.STR_ADDRESS}}</span><span>{{!item.Distance?'':item.Distance < 1 ? Math.round(item.Distance * 100)+"m": (Math.round(item.Distance * 100) / 100 + 'km')}}</span></li>
     </ul>
 </body>
 </html>
@@ -76,6 +76,17 @@
         var model = new vmodel.ViewModel($(document.body), {
             search: ''
         });
+
+        model.isLocated = false;
+
+        model.filterData = function (STR_ADDRESS, search, i) {
+
+            if (search) return vmodel.Filters.contains(STR_ADDRESS, search);
+
+            if (!model.isLocated) return true;
+
+            return i < 5;
+        };
 
         // 百度地图API功能
         var map = new BMap.Map("allmap");
@@ -156,24 +167,18 @@
         }
 
         $(window).on('hashchange', checkPosition);
-        checkPosition();
         if (util.android || location.search == "?v2") {
             navigator.geolocation.getCurrentPosition(function (position) { var coords = position.coords; onPositionChange(coords); }, function (error) {
                 alert("定位失败");
             });
         }
+        checkPosition();
 
-        $.post('/api/shop/shop_list', function (res) {
+        $.post('/api/shop/shop_list?r=' + Date.now(), function (res) {
             if (res && res.data) {
                 var html = "";
 
-                var promise1 = new Promise().resolve();
-
                 promise.shopList = res.data;
-
-                promise1.start(res.data.length).then(function () {
-                    promise.resolve();
-                });
 
                 res.data.forEach(function (item, i) {
 
@@ -186,29 +191,21 @@
 
                     html += '<li data-longitude="' + item.point.lng + '" data-latitude="' + item.point.lat + '"><b>' + item.STR_NAME + '</b><span>' + item.STR_ADDRESS + '</span></li>';
 
-                    var myGeo = new BMap.Geocoder();
-                    // 将地址解析结果显示在地图上,并调整地图视野
-                    myGeo.getPoint(item.STR_ADDRESS, function (point) {
-                        if (point) {
-                            var marker1 = new BMap.Marker(point, {
-                                icon: new BMap.Icon('http://www.absimg.com/media/H5/app/abslogo.png', new BMap.Size(23, 28)),
-                                offset: new BMap.Size(-13, -15)
-                            });  //创建标注
-                            map.addOverlay(marker1);                 // 将标注添加到地图中
-                            //创建信息窗口
-                            var infoWindow1 = new BMap.InfoWindow(item.STR_NAME + "<br>" + item.STR_ADDRESS);
-                            marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
-                            //map.centerAndZoom(point, 16);
 
-                            //item.point = point;
+                    var point = new BMap.Point(item.point.lng, item.point.lat);
 
-                            //item.Distance = getDistance(p1.lat, p1.lng, point.lat, point.lng);
-                        }
-                        promise1.next(i);
-
-                    }, item.STR_REGION);
+                    var marker1 = new BMap.Marker(point, {
+                        icon: new BMap.Icon('http://www.absimg.com/media/H5/app/abslogo.png', new BMap.Size(23, 28)),
+                        offset: new BMap.Size(-11, -14)
+                    });  //创建标注
+                    map.addOverlay(marker1);                 // 将标注添加到地图中
+                    //创建信息窗口
+                    var infoWindow1 = new BMap.InfoWindow(item.STR_NAME + "<br>" + item.STR_ADDRESS);
+                    marker1.addEventListener("click", function () { this.openInfoWindow(infoWindow1); });
                 });
                 model.set('data', res.data);
+
+                promise.resolve();
             }
 
         }, 'json');

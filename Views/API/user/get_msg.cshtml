@@ -25,14 +25,14 @@
         {
             int total;
             var data = db.QueryPage("MSG_ID",
-                "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_READ_DT,MSG_ALL_FLAG",
+                "MSG_ID,MSG_TITLE,MSG_CONTENT,MSG_DT,LPM_STATUS,LPM_START_DT,LPM_READ_DT,MSG_ALL_FLAG",
                 "BMessage left join LPspMsg on MSG_ID=LPM_MSG_ID",
                 "LPM_MDT_ID=4 and ((MSG_ALL_FLAG=0 and LPM_PSP_ID=@p1) or MSG_ALL_FLAG=1) and @p0 between MSG_START_DT and MSG_END_DT",
                 page,
                 pageSize,
                 new object[] { DateTime.Now, userId },
                 out total,
-                new Dictionary<string, bool> { { "MSG_DT", false } });
+                new Dictionary<string, bool> { { "LPM_START_DT", false } });
 
             bool hasRead = false;
 

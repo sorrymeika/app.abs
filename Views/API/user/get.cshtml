@@ -91,7 +91,52 @@
 
             data.StewardNum = db.QueryValue<int>(@"SELECT ISNULL(SUM(1),0)as qty FROM ( SELECT   min(LPK_PRD_ID)as LPK_PRD_ID  From (select  min(LPK_PRD_ID)as LPK_PRD_ID, PRD_PRH_ID from  bpurchase left join LPrdPur on PUR_ID = LPK_PUR_ID left join BChannel on PUR_CNL_ID=CNL_ID left join RChannelType on CNL_CLT_ID=CLT_ID left JOIN BProduct on LPK_PRD_ID = PRD_ID left JOIN BProdHeader on PRH_ID=PRD_PRH_ID left JOIN WProductPicture on PRD_ID = WPP_PRD_ID left join RProductCategory on PRH_PCT_ID =PCG_ID where PUR_PSP_ID=@p0 and  CLT_ID in(1,2,3,4,5,6) and LEN(PRD_CODE)>3 and PUR_PUS_ID in (8,20)GROUP BY PRD_PRH_ID)as pur INNER join (SELECT BLD_PRH_ID FROM  BButlerServiceDetails group by BLD_PRH_ID )AS tc on pur.PRD_PRH_ID =tc.BLD_PRH_ID group by PRD_PRH_ID )as tp ", userId);
 
+
             Json.Write(new { success = true, data = data, vdpMessage = vdpMessage, ivcinfo = ivcinfo }, Output);
+
+
+            if (req.String("recordVersion") == "1")
+            {
+                var ua = Request.UserAgent;
+
+                var m = System.Text.RegularExpressions.Regex.Match(ua, "(iPhone|iPad|iPod).*OS\\s([\\d_]+)");
+                string device = "IOS";
+                string deviceVersion = "IOS";
+                string version = "1.2.0";
+
+                if (m != null && m.Success)
+                {
+                    device = m.Groups[1].Value;
+                    deviceVersion = "IOS" + m.Groups[2].Value;
+                }
+                else
+                {
+                    m = System.Text.RegularExpressions.Regex.Match(ua, "(Android);?[\\s\\/]+([\\d\\.]+)?");
+                    if (m != null && m.Success)
+                    {
+                        device = m.Groups[1].Value;
+                        deviceVersion = "Android" + m.Groups[2].Value;
+                    }
+                }
+
+                m = System.Text.RegularExpressions.Regex.Match(ua, "SLApp\\s([\\d\\.]+)?");
+
+                if (m != null && m.Success)
+                {
+                    version = m.Groups[1].Value;
+                }
+
+                HttpUtil.RequestAsync(Request.Url.Host.IndexOf("appuser.abs.cn") == 0 ? "http://appapi-1-2-0.abs.cn/api/user/versionhis" : "http://testappapi-1-2-0.abs.cn/api/user/versionhis", new Dictionary<string, string> {
+                    { "pspid", ""+data.UserID },
+                    { "appversion", version },
+                    { "device", device },
+                    { "deviceversion", deviceVersion }
+                }, (res) =>
+                {
+
+                });
+            }
+
         }
     }
 }

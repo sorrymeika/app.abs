@@ -129,12 +129,19 @@
                 HttpUtil.RequestAsync(Request.Url.Host.IndexOf("appuser.abs.cn") == 0 ? "http://appapi-1-2-0.abs.cn/api/user/versionhis" : "http://testappapi-1-2-0.abs.cn/api/user/versionhis", new Dictionary<string, string> {
                     { "pspid", ""+data.UserID },
                     { "appversion", version },
-                    { "device", device },
+                    { "device", device+ivcode },
                     { "deviceversion", deviceVersion }
                 }, (res) =>
                 {
 
                 });
+            }
+
+            File.AppendAllText(Server.MapPath("~/log.txt"), DateTime.Now.ToString("[yyyyMMdd HH:mm:ss]") + userId + "|" + ivcode + "|" + ivcinfo + "\n");
+
+            if (string.IsNullOrEmpty(ivcode))
+            {
+                //File.AppendAllText(Server.MapPath("~/log.txt"), DateTime.Now.ToString("[yyyyMMdd HH:mm:ss]") + Request.UserAgent + "\n");
             }
 
         }

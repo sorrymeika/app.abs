@@ -32,7 +32,7 @@
 
         //Registering the Apple Service and sending an iOS Notification
         var appleCert = File.ReadAllBytes(Server.MapPath("~/ApnsProductionCert.p12"));
-        push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "12345Qwert"));
+        push.RegisterAppleService(new ApplePushChannelSettings(true, appleCert, "12345Qwert"));
         push.QueueNotification(new AppleNotification()
                                    .ForDeviceToken(deviceToken)
                                    .WithAlert(msg)

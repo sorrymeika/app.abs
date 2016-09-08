@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <File Include="ApnsProductionCert.p12">
-      <publishTime>01/15/2016 13:53:48</publishTime>
+      <publishTime>09/08/2016 13:34:34</publishTime>
     </File>
     <File Include="App_Code/AuthHelper.cshtml">
       <publishTime>11/07/2015 23:14:40</publishTime>
@@ -31,7 +31,7 @@
       <publishTime>01/11/2016 11:39:08</publishTime>
     </File>
     <File Include="bin/PushSharp.Apple.dll">
-      <publishTime>01/15/2016 15:17:15</publishTime>
+      <publishTime>09/08/2016 13:44:36</publishTime>
     </File>
     <File Include="bin/PushSharp.Core.dll">
       <publishTime>01/15/2016 13:22:59</publishTime>
@@ -40,7 +40,7 @@
       <publishTime>07/15/2016 12:25:30</publishTime>
     </File>
     <File Include="bin/SL.Web.dll">
-      <publishTime>07/21/2016 10:00:05</publishTime>
+      <publishTime>09/08/2016 13:44:37</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/05/2011 15:45:38</publishTime>
@@ -472,13 +472,13 @@
       <publishTime>07/24/2015 12:52:18</publishTime>
     </File>
     <File Include="Views/API/cmbpay/notify.cshtml">
-      <publishTime>07/21/2016 09:59:54</publishTime>
+      <publishTime>08/29/2016 18:05:35</publishTime>
     </File>
     <File Include="Views/API/cmbpay/notifysign.cshtml">
-      <publishTime>07/25/2016 17:17:38</publishTime>
+      <publishTime>08/29/2016 18:05:28</publishTime>
     </File>
     <File Include="Views/API/cmbpay/pay.cshtml">
-      <publishTime>07/25/2016 17:14:18</publishTime>
+      <publishTime>08/29/2016 18:05:47</publishTime>
     </File>
     <File Include="Views/API/destination/add_comment.cshtml">
       <publishTime>07/24/2015 09:17:22</publishTime>
@@ -565,7 +565,7 @@
       <publishTime>06/23/2016 11:13:49</publishTime>
     </File>
     <File Include="Views/API/order/list.cshtml">
-      <publishTime>07/01/2016 10:52:55</publishTime>
+      <publishTime>08/16/2016 16:51:25</publishTime>
     </File>
     <File Include="Views/API/quan/list.cshtml">
       <publishTime>07/27/2015 09:21:37</publishTime>
@@ -583,10 +583,10 @@
       <publishTime>01/07/2016 00:47:42</publishTime>
     </File>
     <File Include="Views/API/settings/pushAction.cshtml">
-      <publishTime>03/08/2016 02:09:15</publishTime>
+      <publishTime>09/08/2016 13:38:39</publishTime>
     </File>
     <File Include="Views/API/settings/pushActionTest.cshtml">
-      <publishTime>01/15/2016 14:18:29</publishTime>
+      <publishTime>09/08/2016 13:43:47</publishTime>
     </File>
     <File Include="Views/API/settings/resourceMapping.cshtml">
       <publishTime>04/19/2016 18:13:55</publishTime>
@@ -606,8 +606,11 @@
     <File Include="Views/API/shop/wxpayqrcode.cshtml">
       <publishTime>12/11/2015 15:09:25</publishTime>
     </File>
+    <File Include="Views/API/user/deviceToken.cshtml">
+      <publishTime>09/08/2016 11:22:38</publishTime>
+    </File>
     <File Include="Views/API/user/get.cshtml">
-      <publishTime>07/20/2016 16:12:22</publishTime>
+      <publishTime>08/29/2016 18:06:08</publishTime>
     </File>
     <File Include="Views/API/user/get_city.cshtml">
       <publishTime>11/07/2015 23:14:40</publishTime>
@@ -622,10 +625,10 @@
       <publishTime>01/07/2016 14:25:52</publishTime>
     </File>
     <File Include="Views/API/user/get_month_free.cshtml">
-      <publishTime>01/11/2016 11:28:11</publishTime>
+      <publishTime>08/29/2016 18:04:43</publishTime>
     </File>
     <File Include="Views/API/user/get_msg.cshtml">
-      <publishTime>05/16/2016 14:08:17</publishTime>
+      <publishTime>08/09/2016 10:48:00</publishTime>
     </File>
     <File Include="Views/API/user/get_order_status.cshtml">
       <publishTime>01/11/2016 14:32:18</publishTime>
@@ -640,7 +643,7 @@
       <publishTime>04/19/2016 12:06:58</publishTime>
     </File>
     <File Include="Views/API/user/login.cshtml">
-      <publishTime>03/18/2016 15:37:06</publishTime>
+      <publishTime>07/28/2016 17:11:34</publishTime>
     </File>
     <File Include="Views/API/user/register.cshtml">
       <publishTime>07/24/2015 10:39:54</publishTime>

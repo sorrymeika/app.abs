@@ -215,6 +215,7 @@
     <Content Include="Views\API\cmbpay\notify.cshtml" />
     <Content Include="public.key" />
     <Content Include="Views\API\cmbpay\notifysign.cshtml" />
+    <Content Include="Views\API\user\deviceToken.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

@@ -92,7 +92,8 @@
                     ID = id,
                     Mobile = mobile,
                     Auth = auth,
-                    Amount = amount
+                    Amount = amount,
+                    PSP_CODE = Base64Util.Encode("pspcode=" + mobile + "&code=" + Md5.MD5(mobile + "abs.cn" + (mobile == "18721979478" ? "605283" : ("" + id))))
                 }
             }, Output);
         }

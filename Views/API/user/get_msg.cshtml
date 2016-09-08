@@ -63,7 +63,7 @@
 
             if (hasRead)
             {
-                var deviceToken = db.QueryValue<string>("select XPS_MOBILE_IMEI from XProspect where XPS_PSP_ID=@p0", userId);
+                var deviceToken = SL.Data.SQL.QueryValue<string>("select XPS_MOBILE_IMEI from XProspect where XPS_PSP_ID=@p0", userId);
 
                 if (deviceToken.StartsWith("<"))
                 {

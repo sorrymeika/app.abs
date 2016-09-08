@@ -6,7 +6,7 @@
 @{
     RequestUtil req = new RequestUtil();
 
-    string deviceToken = "<2c8f938d 5365ff1c 1c730929 b7f004c2 ef850efc 39e6014c a3833dd0 63c95ed6>";
+    string deviceToken = "<26e50600 e4b7efca a704eba3 5b08a246 f499e5d0 8d00545c 44c74a00 908b629b>";
     string msg = "adsfasf";
     int badge = 1;
 
@@ -29,7 +29,7 @@
     //Registering the Apple Service and sending an iOS Notification
     var appleCert = File.ReadAllBytes(Server.MapPath("~/ApnsProductionCert.p12"));
 
-    push.RegisterAppleService(new ApplePushChannelSettings(appleCert, "12345Qwert"));
+    push.RegisterAppleService(new ApplePushChannelSettings(true, appleCert, "12345Qwert"));
     push.QueueNotification(new AppleNotification()
                                .ForDeviceToken(deviceToken)
                                .WithAlert(msg)

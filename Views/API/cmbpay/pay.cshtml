@@ -1,0 +1,74 @@
+﻿@{
+    var payUrl = System.Configuration.ConfigurationManager.AppSettings["CMB_PayUrl"];
+    //"http://61.144.248.29:801/netpayment/BaseHttp.dll?PrePayEUserP"
+    //"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?PrePayEUserP";
+
+    var orderCode = Request.QueryString["orderCode"];
+
+    var data = SL.Data.SQL.QuerySingle("select PUR_CODE,PUR_PSP_ID,PSP_CODE,PUR_PUS_ID,PUR_PAS_ID,PUR_AMOUNT,PUR_EXP_IN_AMOUNT from BPurchase left join BProspect on PUR_PSP_ID=PSP_ID where PUR_CODE=@p0", orderCode);
+
+    if (data == null)
+    {
+        Output.Write("订单不存在");
+        return;
+
+    }
+
+    if (data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT == 0)
+    {
+        Output.Write("订单金额为0，无需支付");
+        return;
+    }
+    var MchNo = System.Configuration.ConfigurationManager.AppSettings["CMB_MchNo"];
+    var BranchID = System.Configuration.ConfigurationManager.AppSettings["CMB_BranchID"];
+    var CoNo = System.Configuration.ConfigurationManager.AppSettings["CMB_CoNo"];//商户号
+    var BillNo = orderCode.Substring(orderCode.Length - 6, 6);
+    String Amount = (data.PUR_AMOUNT + data.PUR_EXP_IN_AMOUNT).ToString("0.00");
+    var MerchantUrl = System.Configuration.ConfigurationManager.AppSettings["CMB_MerchantUrl"]; //SL.Util.RequestFile.FullUrl("api/cmbpay/notify");//支付结果通知url
+    var MerchantPara = "orderCode=" + orderCode;//支付结果通知url参数
+
+
+    String MerchantCode;//商户校验码
+    var MerchantRetUrl = "http://m.abs.cn";
+    var MerchantRetPara = MerchantPara;
+
+    var Date = DateTime.Now.ToString("yyyyMMdd");
+
+
+    CMBCHINALib.FirmClientClass fm = new CMBCHINALib.FirmClientClass();
+
+    var bReserved = @"<Protocol>
+<PNo>" + SL.Util.Md5.Md516("ABS-" + data.PUR_PSP_ID) + @"</PNo>
+<TS>" + DateTime.Now.ToString("yyyyMMddHHmmss") + @"</TS>
+<MchNo>" + MchNo + @"</MchNo>
+<Seq>" + orderCode + @"</Seq>
+<URL>" + System.Configuration.ConfigurationManager.AppSettings["CMB_SignUrl"] + @"</URL>
+<Para>User=" + data.PUR_PSP_ID + @"</Para>
+<MUID>" + data.PSP_CODE + @"</MUID>
+<Mobile>" + data.PUR_PSP_ID + @"</Mobile>
+<LBS></LBS>
+<RskLvl></RskLvl>
+</Protocol>";
+
+    MerchantCode = fm.exGenMerchantCode(System.Configuration.ConfigurationManager.AppSettings["CMB_PrivateKey"], Date, BranchID, CoNo, BillNo, Amount, MerchantPara, MerchantUrl, "", "", Request.UserHostAddress, "54010111", bReserved).ToString();
+
+    System.Text.StringBuilder htmlStr = new System.Text.StringBuilder();
+    htmlStr.Append("<form id=\"pay_form\" method=\"post\" action=\"" + payUrl + "\">");
+    htmlStr.Append("<input name=\"date\" type=\"hidden\" value=\"" + Date + "\" />");
+    htmlStr.Append("<input name=\"cono\" type=\"hidden\" value=\"" + CoNo + "\" />");
+    htmlStr.Append("<input name=\"branchid\" type=\"hidden\" value=\"" + BranchID + "\" />");
+    htmlStr.Append("<input name=\"billno\" type=\"hidden\" value=\"" + BillNo + "\" />");
+    htmlStr.Append("<input name=\"amount\" type=\"hidden\" value=\"" + Amount + "\" />");
+    htmlStr.Append("<input name=\"MerchantUrl\" type=\"hidden\" value=\"" + MerchantUrl + "\" />");
+    htmlStr.Append("<input name=\"MerchantPara\" type=\"hidden\" value=\"" + MerchantPara + "\" />");
+    htmlStr.Append("<input name=\"MerchantCode\" type=\"hidden\" value=\"" + MerchantCode + "\" />");
+    htmlStr.Append("<input name=\"MerchantRetUrl\" type=\"hidden\" value=\"" + MerchantRetUrl + "\" />");
+    htmlStr.Append("<input name=\"MerchantRetPara\" type=\"hidden\" value=\"" + MerchantRetPara + "\" />");
+    //htmlStr.Append("<input type=\"submit\" value=\"submit\" />");
+    htmlStr.Append("</form>");
+
+    htmlStr.Append("<script>document.forms['pay_form'].submit();</script>");
+
+
+    Output.Write(htmlStr);
+}

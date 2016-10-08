@@ -1,0 +1,87 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int userId = req.Int("id", false, "参数错误:userID as id");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        string userName = req.String("UserName");
+        int gender = req.Int("Gender", 3);
+        string birthDay = req.String("BirthDay");
+        string childBirthDay = req.String("ChildBirthDay");
+        int cityId = req.Int("CityID");
+        int familySize = req.Int("FamilySize");
+        int hasChild = req.Int("HasChild", -1);
+
+        string set = "";
+        List<object> parameters = new List<object> { userId };
+
+        if (!string.IsNullOrEmpty(userName))
+        {
+            SL.Data.SQL.Execute("update BProspect set PSP_NAME=@p1 where PSP_ID=@p0", userId, userName);
+        }
+
+        set += ",XPS_GND_ID=@p" + parameters.Count;
+        parameters.Add(gender);
+
+        if (!string.IsNullOrEmpty(birthDay))
+        {
+            set += ",XPS_BIRTH_DT=@p" + parameters.Count;
+            parameters.Add(req.DateTime("BirthDay"));
+        }
+
+        if (cityId != 0)
+        {
+            set += ",XPS_CTY_ID=@p" + parameters.Count;
+            parameters.Add(cityId);
+        }
+
+        if (familySize != 0)
+        {
+            set += ",XPS_FAMILY_SIZE=@p" + parameters.Count;
+            parameters.Add(familySize);
+        }
+
+        if (hasChild != -1)
+        {
+            set += ",XPS_CHILD_FLAG=@p" + parameters.Count;
+            parameters.Add(hasChild == 0 ? false : true);
+        }
+
+        if (!string.IsNullOrEmpty(childBirthDay))
+        {
+            set += ",XPS_CHILD_BIRTH_DT=@p" + parameters.Count;
+            parameters.Add(req.DateTime("ChildBirthDay"));
+        }
+
+        if (set == "")
+        {
+            Json.Write(new { success = false, msg = "未作修改" }, Output);
+        }
+        else
+        {
+            int count = SL.Data.SQL.Execute("update XProspect set " + set.TrimStart(',') + " where XPS_PSP_ID=@p0", parameters.ToArray());
+
+            if (count <= 0)
+            {
+                Json.Write(new { success = false, msg = "修改失败" }, Output);
+            }
+            else
+            {
+                Json.Write(new { success = true, msg = "修改成功" }, Output);
+            }
+        }
+
+    }
+}

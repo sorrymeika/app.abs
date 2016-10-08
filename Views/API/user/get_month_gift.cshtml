@@ -1,0 +1,79 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.QuerySingle("select XPS_START_FREE_DT,XPS_END_FREE_DT from XProspect where XPS_PSP_ID=@p0", userId);
+
+            Dictionary<string, object> currentMonth = null;
+            var hasNextMonthGift = false;
+
+            if (data.XPS_END_FREE_DT != null && data.XPS_START_FREE_DT != null)
+            {
+                DateTime date = DateTime.Today;
+
+
+                if (DateUtil.MonthDiff(DateTime.Today.AddMonths(1), data.XPS_END_FREE_DT) >= 0)
+                {
+                    hasNextMonthGift = true;
+                }
+
+                var item = new Dictionary<string, object>();
+
+                var free = db.QuerySingle("select Top 1 FRE_ID,FRE_NAME,FRE_APP_PIC1 as FRE_MOBILE_PIC1,FRE_MOBILE_PIC2,LPF_PUR_ID from WFree join LFreCnl on LFC_FRE_ID=FRE_ID left join (select LPF_PUR_ID,LPF_FRE_ID from LPspFre where LPF_PSP_ID=@p0) a on LPF_FRE_ID=FRE_ID where FRE_FRT_ID=1 and LFC_CNL_ID=3 and @p1>=LFC_START_TIME and @p1<LFC_END_TIME", userId, date);
+
+                if (free != null)
+                {
+                    item.Add("FRE_ID", free.FRE_ID);
+                    item.Add("FRE_NAME", free.FRE_NAME);
+                    item.Add("FRE_TITLE_PIC", free.FRE_MOBILE_PIC1 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC1 : null);
+                    item.Add("FRE_PIC1", free.FRE_MOBILE_PIC2 != null ? System.Configuration.ConfigurationManager.AppSettings["Media"] + free.FRE_MOBILE_PIC2 : null);
+                    item.Add("LPF_PUR_ID", free.LPF_PUR_ID);
+                }
+                else
+                {
+                    item.Add("FRE_ID", 0);
+                    item.Add("FRE_TITLE_PIC", null);
+                    item.Add("FRE_PIC1", null);
+                }
+
+                item.Add("Year", date.Year);
+                item.Add("Month", date.Month);
+                item.Add("Date", date.ToShortDateString());
+
+                var monthDiff = DateUtil.MonthDiff(date, DateTime.Today);
+                item.Add("MonthDiff", monthDiff);
+
+                item.Add("CanGet", monthDiff == 0 && free != null && free.LPF_PUR_ID == null);
+
+                if (monthDiff > 0)
+                {
+                    item.Add("Overdue", true);
+                }
+                else
+                {
+                    item.Add("Overdue", false);
+                }
+
+                currentMonth = item;
+            }
+
+            Json.Write(new { success = true, data = currentMonth, year = DateTime.Today.Year, hasNextMonthGift = hasNextMonthGift }, Output);
+        }
+    }
+}

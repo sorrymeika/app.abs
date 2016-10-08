@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="log\" />
     <Folder Include="upload\" />
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +217,8 @@
     <Content Include="public.key" />
     <Content Include="Views\API\cmbpay\notifysign.cshtml" />
     <Content Include="Views\API\user\deviceToken.cshtml" />
+    <Content Include="Views\API\user\voucher_detail.cshtml" />
+    <Content Include="Views\API\user\get_month_gift.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

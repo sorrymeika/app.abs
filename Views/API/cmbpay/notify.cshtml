@@ -1,0 +1,25 @@
+﻿@{
+
+    CMBCHINALib.FirmClientClass fc = new CMBCHINALib.FirmClientClass();
+
+    fc.exSetOptions("payment.ebank.cmbchina.com", "");
+
+    var msg = Server.UrlDecode(Request.QueryString.ToString());
+
+    var checkResult = fc.exCheckInfoFromBank(Server.MapPath("~/public.key"), msg);
+
+    var para = Request.QueryString["MerchantPara"];
+
+    var orderCode = para.Replace("orderCode=", "");
+
+    if (checkResult == 0 && Request.QueryString["Succeed"] == "Y")
+    {
+        SL.Data.SQL.Execute("update BPurchase set PUR_PAS_ID=2,PUR_PAY_ID=43 where PUR_CODE=@p0", orderCode);
+    }
+    else
+    {
+        File.AppendAllText(Server.MapPath("~/log/" + DateTime.Now.ToString("yyyy-MM-dd") + ".log"), "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "x]:cmb pay not succeed|" + msg);
+
+        Output.Write(checkResult);
+    }
+}

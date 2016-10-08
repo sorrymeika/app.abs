@@ -1,0 +1,26 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+    string IMEI = req.String("IMEI");
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(IMEI))
+        {
+            SL.Data.SQL.Execute("update XProspect set XPS_MOBILE_IMEI=@p0 where XPS_PSP_ID=@p1", IMEI, userId);
+        }
+    }
+}

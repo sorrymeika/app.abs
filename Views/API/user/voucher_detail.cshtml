@@ -1,0 +1,46 @@
+﻿@using SL.Util
+@{
+    RequestUtil req = new RequestUtil();
+
+    string csvId = req.String("csvId");
+    int userId = req.Int("userId", false, "参数错误:userId");
+    string auth = req.String("auth", false, "参数错误:auth");
+    string newAuth;
+
+    if (req.HasError)
+    {
+        Json.Write(new { success = false, msg = req.FirstError, errors = req.GetErrors() }, Output);
+    }
+    else if (!AuthHelper.Check(userId, auth, out newAuth))
+    {
+        Json.Write(new { success = false, msg = "登录过期，请重新登录" }, Output);
+    }
+    else
+    {
+        string where = "CSV_PSP_ID=@p0 and CSV_ID=@p1 and (CSV_PUR_ID=0 or CSV_PUR_ID is null) and VCA_VALID_FLAG=1 and CSV_USE_FLAG in (0,1) and GetDate()<CSV_END_DT";
+        List<object> parameters = new List<object>() { userId, csvId };
+
+
+        using (SL.Data.Database db = SL.Data.Database.Open())
+        {
+            var data = db.QuerySingle("select VCA_NAME,VCA_DEDUCT_AMOUNT,VCA_VCT_ID,CSV_ID,CSV_CODE,VCA_ID,CSV_USE_FLAG,CSV_START_DT,CSV_END_DT from BCashVoucher join BVoucherActivity on CSV_VCA_ID=VCA_ID where " + where + " order by CSV_END_DT desc", parameters.ToArray());
+
+            if (data != null)
+            {
+
+                data.Products = db.Query("select LVP_PRD_ID,LVP_VCA_ID,PRD_NAME from LVcaPrd join BProduct on PRD_ID=LVP_PRD_ID left join WMobileSiteProduct on MSP_PRD_ID=PRD_ID where ((PRD_DISCONTINUED_FLAG!=1 and (MSP_DISCONTINUED_FLAG is null or MSP_DISCONTINUED_FLAG!=1)) or MSP_DISCONTINUED_FLAG=0) and LVP_VCA_ID=@p0", data.VCA_ID);
+
+                if (DateTime.Now > data.CSV_END_DT)
+                {
+                    data.IsOverdue = true;
+                }
+                else
+                {
+                    data.IsOverdue = false;
+                }
+            }
+
+            Json.Write(new { success = true, data = data }, Output);
+        }
+    }
+}

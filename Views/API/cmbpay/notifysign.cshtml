@@ -1,0 +1,11 @@
+﻿@{
+    StreamReader sr = new StreamReader(Request.InputStream);
+
+    string json = sr.ReadToEnd().Replace("RequestData=", "");
+
+    Dictionary<string, object> result = Json.Decode<Dictionary<string, object>>(json);
+
+    CMBCHINALib.FirmClientClass fc = new CMBCHINALib.FirmClientClass();
+
+    var res = fc.exCheckSignatureFromBank(Server.MapPath("~/public.key"), SL.Util.Base64Util.Decode(result["BUSDAT"].ToString()), result["SIGDAT"].ToString());
+}
